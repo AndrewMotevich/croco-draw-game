@@ -19,7 +19,11 @@
           "packages/croco-draw/src/favicon.ico",
           "packages/croco-draw/src/assets"
         ],
-        "styles": ["packages/croco-draw/src/styles.css"],
+        "styles": [
+          "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+          "node_modules/primeng/resources/primeng.min.css",
+          "packages/croco-draw/src/styles.scss"
+        ],
         "scripts": []
       },
       "configurations": {
@@ -59,10 +63,7 @@
           "browserTarget": "croco-draw:build:development"
         }
       },
-      "defaultConfiguration": "development",
-      "options": {
-        "proxyConfig": "packages/croco-draw/proxy.conf.json"
-      }
+      "defaultConfiguration": "development"
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",

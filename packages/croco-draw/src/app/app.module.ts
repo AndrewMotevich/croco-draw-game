@@ -1,16 +1,13 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
-import { appRoutes } from './app.routes';
-import { NxWelcomeComponent } from './nx-welcome.component';
+import { MainPageComponent } from './croco/pages/main/main.page.component';
+import { appRoutingModule } from './app-routing.module';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
-  declarations: [AppComponent, NxWelcomeComponent],
-  imports: [
-    BrowserModule,
-    RouterModule.forRoot(appRoutes, { initialNavigation: 'enabledBlocking' }),
-  ],
+  declarations: [AppComponent, MainPageComponent],
+  imports: [BrowserModule, appRoutingModule, ButtonModule],
   providers: [],
   bootstrap: [AppComponent],
 })
