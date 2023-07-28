@@ -101,5 +101,6 @@
         "buildTarget": "croco-draw:build"
       }
     }
-  }
+  },
+  "implicitDependencies": ["croco-common-interfaces"]
 }

@@ -1,0 +1,26 @@
+{
+  "name": "croco-common-interfaces",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/croco-common-interfaces/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/croco-common-interfaces",
+        "main": "libs/croco-common-interfaces/src/index.ts",
+        "tsConfig": "libs/croco-common-interfaces/tsconfig.lib.json",
+        "assets": ["libs/croco-common-interfaces/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/croco-common-interfaces/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
