@@ -1,0 +1,15 @@
+.footer-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  a {
+    text-decoration: none;
+  }
+}
+.footer-link-buttons {
+  display: flex;
+  gap: 1rem;
+}

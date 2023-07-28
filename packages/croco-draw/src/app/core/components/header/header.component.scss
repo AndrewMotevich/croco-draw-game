@@ -1,0 +1,25 @@
+.header-wrapper {
+  padding: 1rem;
+  display: flex;
+  width: inherit;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+.flex-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+ul {
+  display: flex;
+  gap: 1rem;
+  a {
+    text-decoration: none;
+    &:hover {
+      cursor: pointer;
+      color: grey;
+    }
+  }
+}

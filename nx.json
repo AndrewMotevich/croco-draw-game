@@ -60,7 +60,8 @@
     },
     "@nx/angular:component": {
       "style": "scss",
-      "skipTests": true
+      "skipTests": true,
+      "changeDetection": "OnPush"
     },
     "@nx/angular:application": {
       "style": "scss",
