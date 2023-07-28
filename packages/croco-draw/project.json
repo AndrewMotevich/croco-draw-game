@@ -20,7 +20,7 @@
           "packages/croco-draw/src/assets"
         ],
         "styles": [
-          "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+          "node_modules/primeng/resources/themes/saga-green/theme.css",
           "node_modules/primeng/resources/primeng.min.css",
           "packages/croco-draw/src/styles.scss"
         ],

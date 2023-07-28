@@ -5,12 +5,18 @@
       src="../../../../assets/images/croco-image.jpg"
       alt="crocodile logo">
     </p-image>
-    Croco draw
+    <span class="game-title">Croco draw</span>
   </h1>
   <nav>
     <ul>
-      <a (click)="navigateTo('main')">Main</a>
-      <a (click)="navigateTo('about')">About</a>
+      <p-button
+        label="Main"
+        icon="pi pi-home"
+        (click)="navigateTo('main')"></p-button>
+      <p-button
+        label="About"
+        icon="pi pi-info-circle"
+        (click)="navigateTo('about')"></p-button>
     </ul>
   </nav>
 </header>
