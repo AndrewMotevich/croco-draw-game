@@ -7,6 +7,9 @@ import { HostPageComponent } from './host.page.component';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
+import { ColorPickerModule } from 'primeng/colorpicker';
+import { SliderModule } from 'primeng/slider';
+import { SpeedDialModule } from 'primeng/speeddial';
 
 @NgModule({
   declarations: [HostPageComponent, PaintPanelComponent],
@@ -17,6 +20,9 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
     ButtonModule,
     InputTextModule,
     ConfirmPopupModule,
+    ColorPickerModule,
+    SliderModule,
+    SpeedDialModule,
   ],
 })
 export class HostPageModule {}

@@ -1,6 +1,29 @@
 .paint-panel-wrapper {
   margin: 1rem;
 }
+.canvas-wrapper {
+  display: flex;
+  gap: 1rem;
+}
+form {
+  margin: 0;
+}
+.canvas-tools {
+  width: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background-color: #fff;
+  border-radius: 1rem;
+}
+.speedDial {
+  height: 4rem;
+  & > * {
+    position: relative;
+    right: 2rem;
+  }
+}
 canvas {
   background-color: rgba($color: #fff, $alpha: 1);
   border-radius: 1rem;

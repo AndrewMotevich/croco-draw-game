@@ -1,5 +1,6 @@
 <div class="paint-panel-wrapper">
   <ng-template [ngIf]="!riddleWord">
+    <h2>Write a riddle word here:</h2>
     <form [formGroup]="riddleWordFrom">
       <div class="p-inputgroup">
         <input
@@ -24,8 +25,39 @@
 
   <ng-template [ngIf]="riddleWord">
     <h2>{{riddleWord}}</h2>
-    <canvas
-      width="500"
-      height="500"></canvas>
+    <div class="canvas-wrapper">
+      <div class="canvas-tools">
+        <form
+          [formGroup]="canvasToolsFrom"
+          class="canvas-tools">
+          <label for="tools">Tools</label>
+          <div class="speedDial">
+            <p-speedDial
+              id="tools"
+              [showIcon]="activeIcon[0]"
+              hideIcon="pi pi-times"
+              [model]="items"
+              direction="right"></p-speedDial>
+          </div>
+          <label for="colorPicker">Color</label>
+          <p-colorPicker
+            id="colorPicker"
+            formControlName="color"></p-colorPicker>
+          <label for="sizeRange">Size</label>
+          <p-slider
+            id="sizeRange"
+            formControlName="size"
+            orientation="vertical"></p-slider>
+          <label for="saveButton">Save</label>
+          <p-button
+            id="saveButton"
+            icon="pi pi-save"
+            styleClass="p-button-outlined pi-button-lg"></p-button>
+        </form>
+      </div>
+      <canvas
+        width="500"
+        height="500"></canvas>
+    </div>
   </ng-template>
 </div>

@@ -4,6 +4,7 @@ import { markAsDirty } from '../../utils/markAsDirty';
 import { ConfirmationService } from 'primeng/api';
 import { generateErrorExpression } from '../../utils/generateErrorExpression';
 import { DrawHostService } from '../../services/draw.host.service';
+import { WebsocketService } from '../../services/websocket.service';
 
 @Component({
   selector: 'croco-paint-panel',
@@ -15,7 +16,36 @@ import { DrawHostService } from '../../services/draw.host.service';
 export class PaintPanelComponent {
   errorExpression = generateErrorExpression;
 
-  riddleWord!: string;
+  riddleWord = 'Sdf';
+
+  activeIcon = ['pi pi-pencil', 'pen'];
+
+  items = [
+    {
+      icon: 'pi pi-pencil',
+      command: () => {
+        this.activeIcon = ['pi pi-pencil', 'pen'];
+      },
+    },
+    {
+      icon: 'fa-solid fa-brush',
+      command: () => {
+        this.activeIcon = ['fa-solid fa-brush', 'brush'];
+      },
+    },
+    {
+      icon: 'pi pi-eraser',
+      command: () => {
+        this.activeIcon = ['pi pi-eraser', 'eraser'];
+      },
+    },
+    {
+      icon: `fa-solid fa-fill`,
+      command: () => {
+        this.activeIcon = ['fa-solid fa-fill', 'fill'];
+      },
+    },
+  ];
 
   riddleWordFrom = new FormGroup({
     riddleWord: new FormControl('', {
@@ -24,9 +54,21 @@ export class PaintPanelComponent {
     }),
   });
 
+  canvasToolsFrom = new FormGroup({
+    color: new FormControl('#000', {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    size: new FormControl(3, {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+  });
+
   constructor(
     private confirmationService: ConfirmationService,
-    private drawService: DrawHostService
+    private drawService: DrawHostService,
+    private websocketService: WebsocketService
   ) {}
 
   confirm(event: Event) {
@@ -43,6 +85,7 @@ export class PaintPanelComponent {
         document.body.addEventListener('click', this.drawService.initCanvas, {
           once: true,
         });
+        this.websocketService.log();
       },
     });
   }

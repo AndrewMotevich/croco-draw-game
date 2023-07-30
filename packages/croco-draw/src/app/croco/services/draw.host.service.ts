@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import { fromEvent } from 'rxjs';
 import { map, switchMap, pairwise, takeUntil } from 'rxjs/operators';
+import { WebsocketService } from './websocket.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DrawHostService {
+  constructor(public websocketService: WebsocketService) {}
+
   public initCanvas() {
     const canvas = document.querySelector('canvas') as HTMLCanvasElement;
+
     const mouseOut$ = fromEvent(canvas, 'mouseout');
 
     const mouseUp$ = fromEvent(canvas, 'mouseup');
