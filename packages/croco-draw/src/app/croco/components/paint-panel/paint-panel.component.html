@@ -1,1 +1,31 @@
-<p>paint-panel works!</p>
+<div class="paint-panel-wrapper">
+  <ng-template [ngIf]="!riddleWord">
+    <form [formGroup]="riddleWordFrom">
+      <div class="p-inputgroup">
+        <input
+          type="text"
+          pInputText
+          placeholder="Keyword"
+          formControlName="riddleWord">
+        <button
+          type="button"
+          pButton
+          label="Submit"
+          (click)="confirm($event)"></button>
+      </div>
+      <small
+        class="error"
+        *ngIf="errorExpression('required', riddleWordFrom.controls.riddleWord)">
+        Riddle word is required
+      </small>
+      <p-confirmPopup></p-confirmPopup>
+    </form>
+  </ng-template>
+
+  <ng-template [ngIf]="riddleWord">
+    <h2>{{riddleWord}}</h2>
+    <canvas
+      width="500"
+      height="500"></canvas>
+  </ng-template>
+</div>

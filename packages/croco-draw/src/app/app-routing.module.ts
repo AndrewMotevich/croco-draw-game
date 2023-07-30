@@ -10,14 +10,14 @@ export const appRoutes: Route[] = [
   { path: 'main', component: MainPageComponent },
   { path: 'about', component: AboutPageComponent },
   {
-    path: 'room/:id',
+    path: 'room',
     children: [
       {
-        path: 'host',
+        path: 'host/:id',
         component: HostPageComponent,
       },
       {
-        path: 'client',
+        path: 'client/:id',
         component: ClientPageComponent,
       },
     ],
