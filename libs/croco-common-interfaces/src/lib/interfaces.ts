@@ -3,6 +3,7 @@ import { DrawTools } from './enums';
 export interface IRoom {
   roomId: string;
   title: string;
+  password: string;
   players: {
     first: { name: string; score: number; ready: boolean };
     second: { name: string; score: number; ready: boolean };
@@ -12,7 +13,7 @@ export interface IRoom {
 export interface IGame {
   room: IRoom;
   gameQnt: number;
-  crocoWord: string;
+  riddleWord: string;
 }
 
 export interface IMousePosition {
@@ -20,7 +21,7 @@ export interface IMousePosition {
   to: { x: number; y: number };
 }
 
-export interface IDrawMessages {
+export interface IDrawMessage {
   roomId: string;
   toolOptions: { tool: DrawTools; color: string; size: number };
   position: IMousePosition;
