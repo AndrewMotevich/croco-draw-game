@@ -1,1 +1,66 @@
-<p>select-room works!</p>
+<p-button
+  styleClass="p-button-help p-button-lg p-button-raised"
+  icon="pi pi-sitemap"
+  label="Select game"
+  (click)="showSelectRoomDialog()"></p-button>
+
+<p-dialog
+  header="SelectGame"
+  [modal]="true"
+  [(visible)]="selectRoomDialog"
+  [style]="{width: '300px'}">
+
+  <form
+    class="form-wrapper"
+    [formGroup]="selectRoomForm">
+
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon">
+          <i class="pi pi-user"></i>
+          </span>
+      <input
+        pInputText
+        class="p-inputtext-lg"
+        placeholder="Enter your name"
+        pTooltip="Enter your username"
+        formControlName="secondUserName">
+    </div>
+    <small
+      class="error"
+      *ngIf="errorExpression('required', selectRoomForm.controls.secondUserName)">
+      User name is required.
+    </small>
+
+    <p-autoComplete
+      class="p-inputtext-lg"
+      placeholder="Select game room"
+      formControlName="room"
+      [dropdown]="true"
+      [suggestions]="filteredGameRooms"
+      (completeMethod)="filterRooms($event)"
+      field="name"></p-autoComplete>
+    <small
+      class="error"
+      *ngIf="errorExpression('required', selectRoomForm.controls.room)">
+      Game room is required.
+    </small>
+
+    <p-password
+      class="p-inputtext-lg"
+      formControlName="selectRoomPassword"
+      pTooltip="Enter password"
+      placeholder="Enter game password"
+      [toggleMask]="true"
+      [feedback]="false"></p-password>
+    <small
+      class="error"
+      *ngIf="errorExpression('required', selectRoomForm.controls.selectRoomPassword)">
+      Password is required.
+    </small>
+
+    <p-button
+      icon="pi pi-iconName"
+      label="Create"
+      (click)="submitSelectRoomForm()"></p-button>
+  </form>
+</p-dialog>

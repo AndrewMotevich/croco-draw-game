@@ -1,1 +1,70 @@
-<p>create-room works!</p>
+<p-button
+  styleClass="p-button-info p-button-lg p-button-raised"
+  icon="pi pi-plus-circle"
+  label="Create game"
+  (click)="showCreateRoomDialog()"></p-button>
+
+<p-dialog
+  header="CreateGame"
+  [modal]="true"
+  [(visible)]="createRoomDialog"
+  [style]="{width: '300px'}">
+  <form
+    class="form-wrapper"
+    [formGroup]="createRoomForm">
+
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-user"></i>
+        </span>
+      <input
+        pInputText
+        type="text"
+        class="p-inputtext-lg"
+        placeholder="Enter your name"
+        pTooltip="Enter your username"
+        formControlName="firstUserName">
+    </div>
+    <small
+      class="error"
+      *ngIf="errorExpression('required', createRoomForm.controls.firstUserName)">
+      Username is required.
+    </small>
+
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon">
+        <i class="pi pi-server"></i>
+        </span>
+      <input
+        pInputText
+        type="text"
+        class="p-inputtext-lg"
+        placeholder="Enter room name"
+        pTooltip="Enter game room name"
+        formControlName="roomName">
+    </div>
+    <small
+      class="error"
+      *ngIf="errorExpression('required', createRoomForm.controls.roomName)">
+      Game room is required.
+    </small>
+
+    <p-password
+      class="p-inputtext-lg"
+      formControlName="createRoomPassword"
+      pTooltip="Enter password"
+      placeholder="Enter game password"
+      [toggleMask]="true"
+      [feedback]="false"></p-password>
+    <small
+      class="error"
+      *ngIf="errorExpression('required', createRoomForm.controls.createRoomPassword)">
+      Password is required.
+    </small>
+
+    <p-button
+      icon="pi pi-iconName"
+      label="Create"
+      (click)="submitCreateRoomForm()"></p-button>
+  </form>
+</p-dialog>
