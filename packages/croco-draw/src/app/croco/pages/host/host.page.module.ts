@@ -10,6 +10,7 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ColorPickerModule } from 'primeng/colorpicker';
 import { SliderModule } from 'primeng/slider';
 import { SpeedDialModule } from 'primeng/speeddial';
+import { DrawHostDirective } from '../../directives/draw.host.directive';
 
 @NgModule({
   declarations: [HostPageComponent, PaintPanelComponent],
@@ -23,6 +24,7 @@ import { SpeedDialModule } from 'primeng/speeddial';
     ColorPickerModule,
     SliderModule,
     SpeedDialModule,
+    DrawHostDirective,
   ],
 })
 export class HostPageModule {}

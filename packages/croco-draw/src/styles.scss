@@ -1,7 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'primeicons/primeicons.css';
+@font-face {
+  font-family: SnesItalic;
+  src: url('./assets/fonts/SnesItalic-1G9Be.ttf');
+}
+
 body {
-  font-family: var(--font-family);
+  // font-family: var(--font-family);
+  font-family: SnesItalic;
+  letter-spacing: 1px;
+  h2 {
+    font-size: 2rem;
+  }
+  label {
+    font-size: 1.4rem;
+  }
   background-color: #b4ffc7;
   margin: 0;
   padding: 0;

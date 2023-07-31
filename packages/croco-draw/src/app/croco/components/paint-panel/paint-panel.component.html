@@ -24,6 +24,7 @@
   </ng-template>
 
   <ng-template [ngIf]="riddleWord">
+
     <h2>{{riddleWord}}</h2>
     <div class="canvas-wrapper">
       <div class="canvas-tools">
@@ -42,22 +43,35 @@
           <label for="colorPicker">Color</label>
           <p-colorPicker
             id="colorPicker"
-            formControlName="color"></p-colorPicker>
+            formControlName="colorPicker"></p-colorPicker>
           <label for="sizeRange">Size</label>
           <p-slider
             id="sizeRange"
-            formControlName="size"
+            [min]="0"
+            [max]="10"
+            [step]="1"
+            formControlName="sizeRange"
             orientation="vertical"></p-slider>
-          <label for="saveButton">Save</label>
+          <label for="saveButton">Save/Clear</label>
           <p-button
             id="saveButton"
             icon="pi pi-save"
-            styleClass="p-button-outlined pi-button-lg"></p-button>
+            styleClass="p-button-outlined pi-button-lg"
+            (click)="saveCanvas(canvas)"></p-button>
+          <p-button
+            icon="pi pi-trash"
+            styleClass="p-button-outlined pi-button-lg"
+            (click)="clearCanvas(canvas)"></p-button>
         </form>
       </div>
       <canvas
+        crocoDrawHost
+        [color]="canvasToolsFrom.controls.colorPicker.value"
+        [range]="canvasToolsFrom.controls.sizeRange.value"
+        [tool]="activeIcon[1].tool"
         width="500"
-        height="500"></canvas>
+        height="500"
+        #canvas></canvas>
     </div>
   </ng-template>
 </div>

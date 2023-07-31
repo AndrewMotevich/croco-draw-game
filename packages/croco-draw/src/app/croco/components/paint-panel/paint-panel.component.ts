@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { markAsDirty } from '../../utils/markAsDirty';
 import { ConfirmationService } from 'primeng/api';
 import { generateErrorExpression } from '../../utils/generateErrorExpression';
-import { DrawHostService } from '../../services/draw.host.service';
-import { WebsocketService } from '../../services/websocket.service';
+import { DrawTools } from 'libs/croco-common-interfaces/src/lib/enums';
+import { clearCanvas, saveCanvas } from '../../helpers/draw.helper';
 
 @Component({
   selector: 'croco-paint-panel',
@@ -16,33 +16,36 @@ import { WebsocketService } from '../../services/websocket.service';
 export class PaintPanelComponent {
   errorExpression = generateErrorExpression;
 
-  riddleWord = 'Sdf';
+  riddleWord!: string;
 
-  activeIcon = ['pi pi-pencil', 'pen'];
+  activeIcon: [string, { tool: DrawTools }] = [
+    'pi pi-pencil',
+    { tool: DrawTools.pen },
+  ];
 
   items = [
     {
       icon: 'pi pi-pencil',
       command: () => {
-        this.activeIcon = ['pi pi-pencil', 'pen'];
+        this.activeIcon = ['pi pi-pencil', { tool: DrawTools.pen }];
       },
     },
     {
       icon: 'fa-solid fa-brush',
       command: () => {
-        this.activeIcon = ['fa-solid fa-brush', 'brush'];
+        this.activeIcon = ['fa-solid fa-brush', { tool: DrawTools.brush }];
       },
     },
     {
       icon: 'pi pi-eraser',
       command: () => {
-        this.activeIcon = ['pi pi-eraser', 'eraser'];
+        this.activeIcon = ['pi pi-eraser', { tool: DrawTools.eraser }];
       },
     },
     {
-      icon: `fa-solid fa-fill`,
+      icon: 'pi pi-eraser',
       command: () => {
-        this.activeIcon = ['fa-solid fa-fill', 'fill'];
+        this.activeIcon = ['pi pi-eraser', { tool: DrawTools.fill }];
       },
     },
   ];
@@ -55,21 +58,17 @@ export class PaintPanelComponent {
   });
 
   canvasToolsFrom = new FormGroup({
-    color: new FormControl('#000', {
+    colorPicker: new FormControl('#000', {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    size: new FormControl(3, {
+    sizeRange: new FormControl(3, {
       nonNullable: true,
       validators: [Validators.required],
     }),
   });
 
-  constructor(
-    private confirmationService: ConfirmationService,
-    private drawService: DrawHostService,
-    private websocketService: WebsocketService
-  ) {}
+  constructor(private confirmationService: ConfirmationService) {}
 
   confirm(event: Event) {
     this.confirmationService.confirm({
@@ -82,11 +81,16 @@ export class PaintPanelComponent {
           return;
         }
         this.riddleWord = this.riddleWordFrom.controls.riddleWord.value;
-        document.body.addEventListener('click', this.drawService.initCanvas, {
-          once: true,
-        });
-        this.websocketService.log();
       },
     });
+  }
+
+  saveCanvas(canvas: HTMLCanvasElement) {
+    saveCanvas(canvas);
+  }
+
+  clearCanvas(canvas: HTMLCanvasElement) {
+    const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    clearCanvas(ctx);
   }
 }

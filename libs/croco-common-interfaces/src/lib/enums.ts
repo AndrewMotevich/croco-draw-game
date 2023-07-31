@@ -1,5 +1,5 @@
 export enum DrawTools {
-  line = 'line',
+  pen = 'pen',
   eraser = 'eraser',
   fill = 'fill',
   brush = 'brush',
