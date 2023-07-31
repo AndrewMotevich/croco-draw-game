@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { markAsDirty } from '../../utils/markAsDirty';
 import { ConfirmationService } from 'primeng/api';
