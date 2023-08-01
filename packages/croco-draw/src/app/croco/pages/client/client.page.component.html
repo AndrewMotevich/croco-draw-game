@@ -1,1 +1,31 @@
-<p>client.page works!</p>
+<main class="main-wrapper">
+  <h2>Write your answer here:</h2>
+  <form [formGroup]="riddleWordFrom">
+    <div class="p-inputgroup">
+      <input
+        type="text"
+        pInputText
+        placeholder="Keyword"
+        formControlName="riddleWord">
+      <button
+        type="button"
+        pButton
+        label="Submit"
+        (click)="submitAnswer()"></button>
+    </div>
+    <small
+      class="error"
+      *ngIf="errorExpression('required', riddleWordFrom.controls.riddleWord)">
+      Riddle word is required!
+    </small>
+    <small
+      class="error"
+      *ngIf="errorExpression('isAnswerValid', riddleWordFrom.controls.riddleWord)">
+      Wrong Answer!
+    </small>
+  </form>
+  <canvas
+    width="500"
+    height="500"
+    #canvas></canvas>
+</main>

@@ -25,15 +25,9 @@ export class PaintPanelComponent {
 
   items = [
     {
-      icon: 'pi pi-pencil',
+      icon: 'fa-solid fa-fill',
       command: () => {
-        this.activeIcon = ['pi pi-pencil', { tool: DrawTools.pen }];
-      },
-    },
-    {
-      icon: 'fa-solid fa-brush',
-      command: () => {
-        this.activeIcon = ['fa-solid fa-brush', { tool: DrawTools.brush }];
+        this.activeIcon = ['fa-solid fa-fill', { tool: DrawTools.fill }];
       },
     },
     {
@@ -43,9 +37,15 @@ export class PaintPanelComponent {
       },
     },
     {
-      icon: 'pi pi-eraser',
+      icon: 'fa-solid fa-brush',
       command: () => {
-        this.activeIcon = ['pi pi-eraser', { tool: DrawTools.fill }];
+        this.activeIcon = ['fa-solid fa-brush', { tool: DrawTools.brush }];
+      },
+    },
+    {
+      icon: 'pi pi-pencil',
+      command: () => {
+        this.activeIcon = ['pi pi-pencil', { tool: DrawTools.pen }];
       },
     },
   ];
