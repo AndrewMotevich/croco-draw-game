@@ -17,11 +17,16 @@ export enum WebsocketServerAction {
 }
 
 export enum WebSocketGameAction {
+  getPlayers = 'getPlayers',
   players = 'players',
   ready = 'ready',
   start = 'start',
   pending = 'pending',
   nextStep = 'nextStep',
+  next = 'next',
+  switchHost = 'switchHost',
+  results = 'results',
   riddleWord = 'riddleWord',
+  answer = 'answer',
   draw = 'draw',
 }

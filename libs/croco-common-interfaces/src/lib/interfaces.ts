@@ -37,7 +37,8 @@ export interface IGameRoomMessage {
 export interface IDrawPayload {
   roomId: string;
   toolOptions: { tool: DrawTools; color: string; size: number };
-  position: IMousePosition;
+  position?: IMousePosition;
+  fillCoordinate?: { x: number; y: number };
 }
 
 export interface IMousePosition {

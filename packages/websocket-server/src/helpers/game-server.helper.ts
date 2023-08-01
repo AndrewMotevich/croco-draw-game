@@ -4,7 +4,6 @@ import * as WebSocket from 'ws';
 export function managePlayers(
   server: WebSocket.Server,
   players: { first?: IPlayer; second?: IPlayer },
-  userName: string,
   ws: WebSocket,
   myInfo: IPlayer,
   order: WeakSet<{ order: UserOrder }>

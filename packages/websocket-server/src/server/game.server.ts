@@ -42,35 +42,70 @@ export function createNewGameServer(serverName: string, password: string) {
       ready: false,
       host: false,
     };
-    managePlayers(
-      gameServer.server,
-      players,
-      user_name.toString(),
-      ws,
-      myPlayerInfo,
-      order
-    );
+    managePlayers(gameServer.server, players, ws, myPlayerInfo, order);
 
     ws.on('error', console.error);
     ws.on('message', (message) => {
       const parsedMessage = JSON.parse(message.toString()) as IGameRoomMessage;
+      const payload = parsedMessage.payload;
       switch (parsedMessage.type) {
-        case WebSocketGameAction.players:
-          ws.send(JSON.stringify(players));
+        case WebSocketGameAction.getPlayers:
+          ws.send(
+            JSON.stringify({
+              type: WebSocketGameAction.players,
+              payload: players,
+            })
+          );
           break;
+
         case WebSocketGameAction.ready:
           myPlayerInfo.ready = true;
           if (players.first.ready && players.second.ready) {
-            gameServer.server.clients.forEach(() => {
-              ws.send(JSON.stringify({ type: WebSocketGameAction.start }));
+            gameServer.server.clients.forEach((client) => {
+              client.send(JSON.stringify({ type: WebSocketGameAction.start }));
             });
           } else ws.send(JSON.stringify({ type: WebSocketGameAction.pending }));
           break;
+
         case WebSocketGameAction.nextStep:
+          if (game.gameQnt === 2) {
+            gameServer.server.clients.forEach((client) => {
+              client.send(
+                JSON.stringify({ type: WebSocketGameAction.switchHost })
+              );
+            });
+            game.gameQnt += 1;
+          } else if (game.gameQnt === 5) {
+            gameServer.server.clients.forEach((client) => {
+              client.send(
+                JSON.stringify({ type: WebSocketGameAction.results })
+              );
+            });
+          } else {
+            game.gameQnt += 1;
+            gameServer.server.clients.forEach((client) => {
+              client.send(JSON.stringify({ type: WebSocketGameAction.next }));
+            });
+          }
           break;
+
         case WebSocketGameAction.riddleWord:
+          if (payload) {
+            game.riddleWord = (payload as { riddleWord: string }).riddleWord;
+          } else {
+            ws.send(
+              JSON.stringify({
+                type: WebSocketGameAction.answer,
+                payload: game.riddleWord,
+              })
+            );
+          }
           break;
+
         case WebSocketGameAction.draw:
+          gameServer.server.clients.forEach((client) => {
+            client.send(message);
+          });
           break;
       }
     });
