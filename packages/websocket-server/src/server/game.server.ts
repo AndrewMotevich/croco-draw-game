@@ -1,7 +1,6 @@
 import * as WebSocket from 'ws';
 import { managePlayers } from '../helpers/game-server.helper';
 import {
-  IWebSocketGameServer,
   addServerAction,
   websocketServersReducer,
 } from '../store/servers.store';
@@ -9,7 +8,7 @@ import {
   IGame,
   IGameRoomMessage,
   IPlayer,
-  IRoom,
+  IWebSocketGameServer,
   WebSocketGameAction,
 } from '@croco/../libs/croco-common-interfaces';
 
@@ -19,10 +18,6 @@ export function createNewGameServer(serverName: string, password: string) {
     password: password,
     roomId: roomId,
     server: new WebSocket.Server({ noServer: true }),
-    serverName: serverName,
-  };
-  const room: IRoom = {
-    roomId: roomId,
     serverName: serverName,
   };
   const players: { first?: IPlayer; second?: IPlayer } = {};

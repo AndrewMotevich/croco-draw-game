@@ -1,3 +1,4 @@
+import * as WebSocket from 'ws';
 import {
   DrawTools,
   UserOrder,
@@ -5,9 +6,11 @@ import {
   WebsocketServerAction,
 } from './enums';
 
-export interface IRoom {
+export interface IWebSocketGameServer {
   roomId: string;
   serverName: string;
+  password: string;
+  server: WebSocket.Server;
 }
 
 export interface IPlayer {

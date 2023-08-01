@@ -1,12 +1,6 @@
-import * as WebSocket from 'ws';
 import { BehaviorSubject } from 'rxjs';
+import { IWebSocketGameServer } from '@croco/../libs/croco-common-interfaces';
 
-export interface IWebSocketGameServer {
-  roomId: string;
-  serverName: string;
-  password: string;
-  server: WebSocket.Server;
-}
 //store
 let WebsocketServers: IWebSocketGameServer[] = [];
 export const WebsocketServersObservable: BehaviorSubject<
