@@ -80,9 +80,3 @@ server.on('upgrade', function upgrade(request, socket, head) {
     socket.destroy();
   }
 });
-
-// broadcast template
-
-// mainWebsocketServer.clients.forEach((client) => {
-//   client.send("message");
-// });

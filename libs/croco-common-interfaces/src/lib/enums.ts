@@ -5,9 +5,9 @@ export enum DrawTools {
   brush = 'brush',
 }
 
-export enum UserStatus {
-  online = 'online',
-  offline = 'offline',
+export enum UserOrder {
+  first = 'first',
+  second = 'second',
 }
 
 export enum WebsocketServerAction {
@@ -17,12 +17,11 @@ export enum WebsocketServerAction {
 }
 
 export enum WebSocketGameAction {
-  connect = 'connect',
+  players = 'players',
   ready = 'ready',
+  start = 'start',
+  pending = 'pending',
+  nextStep = 'nextStep',
   riddleWord = 'riddleWord',
   draw = 'draw',
-  nextStep = 'nextStep',
-  answer = 'answer',
-  getScore = 'getScore',
-  newGame = 'newGame',
 }
