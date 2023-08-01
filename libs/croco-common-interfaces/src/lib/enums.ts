@@ -10,13 +10,14 @@ export enum UserStatus {
   offline = 'offline',
 }
 
-export enum WebsocketRoomAction {
-  createRoom = 'createRoom',
-  connectToRoom = 'connectToRoom',
-  deleteRoom = 'deleteRoom',
+export enum WebsocketServerAction {
+  createServer = 'createServer',
+  removeServer = 'removeServer',
+  serverList = 'serverList',
 }
 
-export enum WebSocketUserAction {
+export enum WebSocketGameAction {
+  connect = 'connect',
   ready = 'ready',
   riddleWord = 'riddleWord',
   draw = 'draw',

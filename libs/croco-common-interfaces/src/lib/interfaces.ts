@@ -1,24 +1,28 @@
 import {
   DrawTools,
   UserStatus,
-  WebSocketUserAction,
-  WebsocketRoomAction,
+  WebSocketGameAction,
+  WebsocketServerAction,
 } from './enums';
 
 export interface IRoom {
   roomId: string;
-  title: string;
-  password: string;
+  serverName: string;
+}
+
+export interface IPlayers {
   players: {
-    first: { name: string; score: number; ready: boolean; status: UserStatus };
-    second: { name: string; score: number; ready: boolean; status: UserStatus };
-  };
-  game: IGame;
+    name: string;
+    score: number;
+    ready: boolean;
+    status: UserStatus;
+  }[];
 }
 
 export interface IGame {
   gameQnt: number;
   riddleWord: string;
+  drawCache: IDrawMessage[];
 }
 
 export interface IMousePosition {
@@ -32,12 +36,12 @@ export interface IDrawMessage {
   position: IMousePosition;
 }
 
-export interface IMainWebsocketServerMessage {
-  type: WebsocketRoomAction;
-  payload: unknown;
+export interface IMainServerMessage {
+  type: WebsocketServerAction;
+  payload?: unknown;
 }
 
 export interface IGameRoomMessage {
-  type: WebSocketUserAction;
+  type: WebSocketGameAction;
   payload: unknown;
 }
