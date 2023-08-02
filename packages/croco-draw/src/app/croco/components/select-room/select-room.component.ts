@@ -3,7 +3,9 @@ import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { markAsDirty } from '../../utils/markAsDirty';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { generateErrorExpression } from '../../utils/generateErrorExpression';
-import { WebsocketService } from '../../services/websocket.main.service';
+import { WebsocketMainService } from '../../services/websocket.main.service';
+import { WebsocketGameService } from '../../services/websoket.game.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'croco-select-room',
@@ -17,10 +19,13 @@ export class SelectRoomComponent {
   public selectRoomDialog = false;
 
   public selectRoomForm = new FormGroup({
-    room: new FormControl('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
+    room: new FormControl<{ name: string; roomId: string }>(
+      { roomId: '', name: '' },
+      {
+        nonNullable: true,
+        validators: [Validators.required],
+      }
+    ),
     selectRoomPassword: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required],
@@ -31,15 +36,21 @@ export class SelectRoomComponent {
     }),
   });
 
-  public gameRooms = [
-    { name: 'room1', roomId: 'abc' },
-    { name: 'room2', roomId: 'cba' },
-  ];
+  public gameRooms: { name: string; roomId: string }[] = [];
 
   public filteredGameRooms!: object[];
 
-  constructor(private websocketService: WebsocketService) {
-    this.websocketService.serverList$.subscribe((res) => console.log(res));
+  constructor(
+    private mainWebsocketService: WebsocketMainService,
+    private gameWebsocketService: WebsocketGameService,
+    private messageService: MessageService
+  ) {
+    this.mainWebsocketService.serverList$.subscribe((list) => {
+      console.log(list);
+      list.forEach((server) => {
+        this.gameRooms.push({ name: server.serverName, roomId: server.roomId });
+      });
+    });
   }
 
   public submitSelectRoomForm() {
@@ -47,7 +58,22 @@ export class SelectRoomComponent {
       markAsDirty(this.selectRoomForm.controls);
       return;
     }
-    alert(JSON.stringify(this.selectRoomForm.getRawValue()));
+    const { room, secondUserName, selectRoomPassword } =
+      this.selectRoomForm.controls;
+    this.gameWebsocketService.setCredentials(
+      room.value.roomId,
+      selectRoomPassword.value,
+      secondUserName.value
+    );
+    try {
+      this.gameWebsocketService.newGameConnection();
+    } catch (err) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Server Error',
+        detail: 'Incorrect server',
+      });
+    }
   }
 
   public filterRooms(event: AutoCompleteCompleteEvent) {

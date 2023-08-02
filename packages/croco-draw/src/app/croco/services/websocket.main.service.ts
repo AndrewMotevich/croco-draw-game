@@ -8,7 +8,7 @@ import { Subject, fromEvent } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class WebsocketService {
+export class WebsocketMainService {
   private mainWebSocket = new WebSocket('ws://localhost:8999/main');
 
   private mainWebsocketMessageObservable$ = fromEvent<MessageEvent>(
@@ -16,7 +16,8 @@ export class WebsocketService {
     'message'
   );
 
-  public serverList$ = new Subject();
+  public serverList$ = new Subject<IWebSocketGameServer[]>();
+  public hostServerId$ = new Subject<string>();
 
   constructor() {
     this.mainWebsocketMessageObservable$.subscribe((message) => {
@@ -30,6 +31,11 @@ export class WebsocketService {
           parsedMessage as { type: string; servers: IWebSocketGameServer[] }
         ).servers;
         this.serverList$.next(payload);
+      }
+      if ((parsedMessage as { serverId: string }).serverId) {
+        this.hostServerId$.next(
+          (parsedMessage as { serverId: string }).serverId
+        );
       }
     });
     this.mainWebSocket.addEventListener('open', () => {

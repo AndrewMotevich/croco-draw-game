@@ -103,6 +103,7 @@ export function createNewGameServer(serverName: string, password: string) {
           break;
       }
     });
+    ws.send(JSON.stringify({ message: 'connected' }));
   });
 
   websocketServersReducer(addServerAction(gameServer));
