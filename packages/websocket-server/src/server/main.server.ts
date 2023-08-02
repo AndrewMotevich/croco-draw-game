@@ -1,5 +1,5 @@
 import express from 'express';
-import { parse } from 'url';
+import url, { parse } from 'url';
 import * as http from 'http';
 import * as WebSocket from 'ws';
 import { IMainServerMessage } from '@croco/../libs/croco-common-interfaces';
@@ -34,17 +34,17 @@ mainWebsocketServer.on('connection', (ws: WebSocket) => {
     if (parseObject.type === WebsocketServerAction.removeServer) {
       const serverId = (parseObject.payload as { serverId: string }).serverId;
       websocketServersReducer(removeServerAction({ serverId: serverId }));
-      ws.send(`Server ${serverId} was deleted`);
+      ws.send(JSON.stringify({ message: `room ${serverId} was deleted` }));
     }
     if (parseObject.type === WebsocketServerAction.serverList) {
       WebsocketServersObservable.subscribe((servers) => {
-        ws.send(JSON.stringify(servers));
+        ws.send(JSON.stringify({ type: 'servers', servers: servers }));
       });
     }
   });
 
   ws.send(
-    'You are connected to main Websocket server.\n Options: create, delete game room'
+    JSON.stringify({ message: 'You connected to main websocket server' })
   );
 });
 
@@ -58,7 +58,8 @@ server.on('upgrade', function upgrade(request, socket, head) {
   } else if (pathname === `/room`) {
     WebsocketServersObservable.subscribe((servers) => {
       authenticate(request, function next() {
-        const { room_id, password } = request.headers;
+        const { room_id, password } = url.parse(request.url, true).query;
+
         const gameServer =
           servers.find((server) => server.roomId === room_id) || null;
 

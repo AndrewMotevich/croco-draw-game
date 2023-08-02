@@ -1,4 +1,5 @@
 import * as WebSocket from 'ws';
+import url from 'url';
 import { managePlayers } from '../helpers/game-server.helper';
 import {
   addServerAction,
@@ -29,7 +30,7 @@ export function createNewGameServer(serverName: string, password: string) {
   const order: WeakSet<IPlayer> = new WeakSet();
 
   gameServer.server.on('connection', (ws: WebSocket, request) => {
-    const { user_name } = request.headers;
+    const { user_name } = url.parse(request.url, true).query;
     const myPlayerInfo: IPlayer = {
       order: null,
       name: user_name.toString(),

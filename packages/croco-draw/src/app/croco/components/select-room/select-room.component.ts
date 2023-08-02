@@ -3,6 +3,7 @@ import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { markAsDirty } from '../../utils/markAsDirty';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { generateErrorExpression } from '../../utils/generateErrorExpression';
+import { WebsocketService } from '../../services/websocket.service';
 
 @Component({
   selector: 'croco-select-room',
@@ -36,6 +37,10 @@ export class SelectRoomComponent {
   ];
 
   public filteredGameRooms!: object[];
+
+  constructor(private websocketService: WebsocketService) {
+    this.websocketService.serverList$.subscribe((res) => console.log(res));
+  }
 
   public submitSelectRoomForm() {
     if (!this.selectRoomForm.valid) {
