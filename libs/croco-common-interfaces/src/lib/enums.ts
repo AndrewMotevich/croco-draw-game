@@ -16,7 +16,7 @@ export enum WebsocketServerAction {
   serverList = 'serverList',
 }
 
-export enum WebSocketGameAction {
+export enum GameMessagesType {
   getPlayers = 'getPlayers',
   players = 'players',
   ready = 'ready',

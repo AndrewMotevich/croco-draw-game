@@ -2,7 +2,7 @@ import * as WebSocket from 'ws';
 import {
   DrawTools,
   UserOrder,
-  WebSocketGameAction,
+  GameMessagesType,
   WebsocketServerAction,
 } from './enums';
 
@@ -33,7 +33,7 @@ export interface IMainServerMessage {
 }
 
 export interface IGameRoomMessage {
-  type: WebSocketGameAction;
+  type: GameMessagesType;
   payload?: unknown;
 }
 

@@ -10,7 +10,7 @@ import {
   removeServerAction,
   websocketServersReducer,
 } from '../store/servers.store';
-import { authenticate } from './authenticate';
+import { authenticate } from '../helpers/authenticate.helper';
 
 const app = express();
 export const server = http.createServer(app);

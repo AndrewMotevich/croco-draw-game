@@ -18,14 +18,10 @@
       *ngIf="errorExpression('required', riddleWordFrom.controls.riddleWord)">
       Riddle word is required!
     </small>
-    <small
-      class="error"
-      *ngIf="errorExpression('isAnswerValid', riddleWordFrom.controls.riddleWord)">
-      Wrong Answer!
-    </small>
   </form>
   <canvas
     width="500"
     height="500"
     #canvas></canvas>
+  <p-toast></p-toast>
 </main>

@@ -9,7 +9,7 @@ import {
   IGameRoomMessage,
   IPlayer,
   IWebSocketGameServer,
-  WebSocketGameAction,
+  GameMessagesType,
 } from '@croco/../libs/croco-common-interfaces';
 
 export function createNewGameServer(serverName: string, password: string) {
@@ -44,60 +44,58 @@ export function createNewGameServer(serverName: string, password: string) {
       const parsedMessage = JSON.parse(message.toString()) as IGameRoomMessage;
       const payload = parsedMessage.payload;
       switch (parsedMessage.type) {
-        case WebSocketGameAction.getPlayers:
+        case GameMessagesType.getPlayers:
           ws.send(
             JSON.stringify({
-              type: WebSocketGameAction.players,
+              type: GameMessagesType.players,
               payload: players,
             })
           );
           break;
 
-        case WebSocketGameAction.ready:
+        case GameMessagesType.ready:
           myPlayerInfo.ready = true;
           if (players.first.ready && players.second.ready) {
             gameServer.server.clients.forEach((client) => {
-              client.send(JSON.stringify({ type: WebSocketGameAction.start }));
+              client.send(JSON.stringify({ type: GameMessagesType.start }));
             });
-          } else ws.send(JSON.stringify({ type: WebSocketGameAction.pending }));
+          } else ws.send(JSON.stringify({ type: GameMessagesType.pending }));
           break;
 
-        case WebSocketGameAction.nextStep:
+        case GameMessagesType.nextStep:
           if (game.gameQnt === 2) {
             gameServer.server.clients.forEach((client) => {
               client.send(
-                JSON.stringify({ type: WebSocketGameAction.switchHost })
+                JSON.stringify({ type: GameMessagesType.switchHost })
               );
             });
             game.gameQnt += 1;
           } else if (game.gameQnt === 5) {
             gameServer.server.clients.forEach((client) => {
-              client.send(
-                JSON.stringify({ type: WebSocketGameAction.results })
-              );
+              client.send(JSON.stringify({ type: GameMessagesType.results }));
             });
           } else {
             game.gameQnt += 1;
             gameServer.server.clients.forEach((client) => {
-              client.send(JSON.stringify({ type: WebSocketGameAction.next }));
+              client.send(JSON.stringify({ type: GameMessagesType.next }));
             });
           }
           break;
 
-        case WebSocketGameAction.riddleWord:
+        case GameMessagesType.riddleWord:
           if (payload) {
             game.riddleWord = (payload as { riddleWord: string }).riddleWord;
           } else {
             ws.send(
               JSON.stringify({
-                type: WebSocketGameAction.answer,
+                type: GameMessagesType.answer,
                 payload: game.riddleWord,
               })
             );
           }
           break;
 
-        case WebSocketGameAction.draw:
+        case GameMessagesType.draw:
           gameServer.server.clients.forEach((client) => {
             client.send(message);
           });
