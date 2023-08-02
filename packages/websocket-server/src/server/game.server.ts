@@ -38,7 +38,7 @@ export function createNewGameServer(serverName: string, password: string) {
       ready: false,
       host: false,
     };
-    managePlayers(gameServer.server, players, ws, myPlayerInfo, order);
+    managePlayers(gameServer.server, players, ws, myPlayerInfo, order, game);
 
     ws.on('error', (err) => {
       alert(err);
@@ -81,12 +81,16 @@ export function createNewGameServer(serverName: string, password: string) {
                 JSON.stringify({ type: GameMessagesType.switchHost })
               );
             });
+            myPlayerInfo.score += 1;
             game.gameQnt += 1;
           } else if (game.gameQnt === 5) {
             gameServer.server.clients.forEach((client) => {
+              players.first.ready = false;
+              players.second.ready = false;
               client.send(JSON.stringify({ type: GameMessagesType.results }));
             });
           } else {
+            myPlayerInfo.score += 1;
             game.gameQnt += 1;
             gameServer.server.clients.forEach((client) => {
               client.send(JSON.stringify({ type: GameMessagesType.next }));
@@ -95,16 +99,15 @@ export function createNewGameServer(serverName: string, password: string) {
           break;
 
         case GameMessagesType.riddleWord:
-          if (payload) {
-            game.riddleWord = (payload as { riddleWord: string }).riddleWord;
-          } else {
-            ws.send(
+          game.riddleWord = (payload as { riddleWord: string }).riddleWord;
+          gameServer.server.clients.forEach((client) => {
+            client.send(
               JSON.stringify({
                 type: GameMessagesType.answer,
                 payload: game.riddleWord,
               })
             );
-          }
+          });
           break;
 
         case GameMessagesType.order:

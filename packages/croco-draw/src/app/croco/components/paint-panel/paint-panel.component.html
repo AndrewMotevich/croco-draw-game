@@ -1,5 +1,5 @@
 <div class="paint-panel-wrapper">
-  <ng-template [ngIf]="!riddleWord">
+  <ng-template [ngIf]="!showCanvas">
     <h2>Write a riddle word here:</h2>
     <form [formGroup]="riddleWordFrom">
       <div class="p-inputgroup">
@@ -23,7 +23,7 @@
     </form>
   </ng-template>
 
-  <ng-template [ngIf]="riddleWord">
+  <ng-template [ngIf]="showCanvas">
 
     <h2>{{riddleWord}}</h2>
     <div class="canvas-wrapper">

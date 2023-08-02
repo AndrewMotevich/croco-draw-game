@@ -1,10 +1,17 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { markAsDirty } from '../../utils/markAsDirty';
 import { ConfirmationService } from 'primeng/api';
 import { generateErrorExpression } from '../../utils/generateErrorExpression';
 import { DrawTools } from 'libs/croco-common-interfaces/src/lib/enums';
 import { clearCanvas, saveCanvas } from '../../helpers/draw.helper';
+import { WebsocketGameService } from '../../services/websoket.game.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'croco-paint-panel',
@@ -13,8 +20,10 @@ import { clearCanvas, saveCanvas } from '../../helpers/draw.helper';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ConfirmationService],
 })
-export class PaintPanelComponent {
+export class PaintPanelComponent implements OnInit {
   public errorExpression = generateErrorExpression;
+
+  public showCanvas = false;
 
   public riddleWord!: string;
 
@@ -68,7 +77,12 @@ export class PaintPanelComponent {
     }),
   });
 
-  constructor(private confirmationService: ConfirmationService) {}
+  constructor(
+    private confirmationService: ConfirmationService,
+    private gameWebsocketServer: WebsocketGameService,
+    private router: Router,
+    private changeDetection: ChangeDetectorRef
+  ) {}
 
   public confirm(event: Event) {
     this.confirmationService.confirm({
@@ -81,7 +95,26 @@ export class PaintPanelComponent {
           return;
         }
         this.riddleWord = this.riddleWordFrom.controls.riddleWord.value;
+        this.showCanvas = true;
+        this.gameWebsocketServer.setRiddleWord(this.riddleWord);
       },
+    });
+  }
+
+  ngOnInit() {
+    this.gameWebsocketServer.next$.next(false);
+    this.gameWebsocketServer.switchHost$.next(false);
+    this.gameWebsocketServer.switchHost$.subscribe((value) => {
+      if (value) {
+        console.log('switch to client');
+        this.router.navigate(['/client']);
+      }
+    });
+    this.gameWebsocketServer.next$.subscribe((value) => {
+      if (value) {
+        this.showCanvas = false;
+        this.changeDetection.detectChanges();
+      }
     });
   }
 

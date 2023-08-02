@@ -1,4 +1,8 @@
-import { IPlayer, UserOrder } from '@croco/../libs/croco-common-interfaces';
+import {
+  IGame,
+  IPlayer,
+  UserOrder,
+} from '@croco/../libs/croco-common-interfaces';
 import * as WebSocket from 'ws';
 
 export function managePlayers(
@@ -6,7 +10,8 @@ export function managePlayers(
   players: { first?: IPlayer; second?: IPlayer },
   ws: WebSocket,
   myInfo: IPlayer,
-  order: WeakSet<{ order: UserOrder }>
+  order: WeakSet<{ order: UserOrder }>,
+  game: IGame
 ) {
   if (server.clients.size >= 3) {
     ws.close();
@@ -26,5 +31,6 @@ export function managePlayers(
     myInfo.order = UserOrder.first;
     myInfo.host = true;
     order.add(players.first);
+    game.gameQnt = 0;
   }
 }

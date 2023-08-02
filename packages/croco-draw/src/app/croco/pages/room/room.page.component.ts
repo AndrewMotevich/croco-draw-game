@@ -48,6 +48,7 @@ export class RoomPageComponent implements OnInit {
       this.players = players;
       this.changeDetection.detectChanges();
     });
+    this.gameWebsocketService.startGame$.next(false);
     this.gameWebsocketService.startGame$.subscribe((value) => {
       if (value) {
         this.gameWebsocketService.myUserObject();

@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { generateErrorExpression } from '../../utils/generateErrorExpression';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { markAsDirty } from '../../utils/markAsDirty';
 import { MessageService } from 'primeng/api';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { WebsocketGameService } from '../../services/websoket.game.service';
+import { Router } from '@angular/router';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -13,7 +15,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
   providers: [MessageService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClientPageComponent {
+export class ClientPageComponent implements OnInit {
   private riddleWord = 'answer';
   public errorExpression = generateErrorExpression;
   public isAnswerValid = false;
@@ -25,7 +27,29 @@ export class ClientPageComponent {
     }),
   });
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private gameWebsocketServer: WebsocketGameService,
+    private router: Router
+  ) {}
+
+  ngOnInit() {
+    this.gameWebsocketServer.answer$.subscribe((answer) => {
+      this.riddleWord = answer;
+    });
+    this.gameWebsocketServer.switchHost$.next(false);
+    this.gameWebsocketServer.switchHost$.subscribe((value) => {
+      if (value) {
+        this.router.navigate(['/host']);
+      }
+    });
+    this.gameWebsocketServer.results$.next(false);
+    this.gameWebsocketServer.results$.subscribe((value) => {
+      if (value) {
+        this.router.navigate(['/room']);
+      }
+    });
+  }
 
   public submitAnswer() {
     if (!this.riddleWordFrom.valid) {
@@ -42,7 +66,10 @@ export class ClientPageComponent {
         summary: 'Error',
         detail: 'Wrong answer',
       });
+      return;
     }
-    // add next step
+    this.riddleWordFrom.reset();
+    this.gameWebsocketServer.nextStep();
+    // clear canvas
   }
 }

@@ -18,12 +18,18 @@ export class WebsocketGameService {
   private messageObservable$!: Observable<MessageEvent>;
   private errorObservable$!: Observable<MessageEvent>;
 
-  public onConnected$ = new BehaviorSubject<boolean>(false);
-  public players$ = new BehaviorSubject<IPlayer[]>([]);
-  public serverName$ = new BehaviorSubject<string>('Unknown');
+  public serverName$ = new BehaviorSubject<string>('');
   public serverId$ = new BehaviorSubject<string>('');
+
   public myUserObject$ = new Subject<IPlayer>();
+  public players$ = new BehaviorSubject<IPlayer[]>([]);
+  public answer$ = new BehaviorSubject<string>('');
+
+  public onConnected$ = new BehaviorSubject<boolean>(false);
   public startGame$ = new BehaviorSubject<boolean>(false);
+  public results$ = new BehaviorSubject<boolean>(false);
+  public switchHost$ = new BehaviorSubject<boolean>(false);
+  public next$ = new BehaviorSubject<boolean>(false);
 
   public setCredentials(roomId: string, password: string, userName: string) {
     this.roomId = roomId;
@@ -49,8 +55,20 @@ export class WebsocketGameService {
           Object.values(parsedMessage.payload as { [key: string]: IPlayer })
         );
       }
+      if (parsedMessage.type === GameMessagesType.results) {
+        this.results$.next(true);
+      }
+      if (parsedMessage.type === GameMessagesType.switchHost) {
+        this.switchHost$.next(true);
+      }
+      if (parsedMessage.type === GameMessagesType.next) {
+        this.next$.next(true);
+      }
       if (parsedMessage.type === GameMessagesType.start) {
         this.startGame$.next(true);
+      }
+      if (parsedMessage.type === GameMessagesType.answer) {
+        this.answer$.next(parsedMessage.payload as string);
       }
       if (JSON.parse(message.data).type === 'serverInfo') {
         this.serverName$.next(JSON.parse(message.data).serverName);
@@ -85,5 +103,20 @@ export class WebsocketGameService {
 
   public readyToGame() {
     this.gameWebSocket.send(JSON.stringify({ type: GameMessagesType.ready }));
+  }
+
+  public nextStep() {
+    this.gameWebSocket.send(
+      JSON.stringify({ type: GameMessagesType.nextStep })
+    );
+  }
+
+  public setRiddleWord(riddleWord: string) {
+    this.gameWebSocket.send(
+      JSON.stringify({
+        type: GameMessagesType.riddleWord,
+        payload: { riddleWord: riddleWord },
+      })
+    );
   }
 }
