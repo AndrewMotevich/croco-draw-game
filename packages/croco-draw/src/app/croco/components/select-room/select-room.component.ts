@@ -3,7 +3,7 @@ import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { markAsDirty } from '../../utils/markAsDirty';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { generateErrorExpression } from '../../utils/generateErrorExpression';
-import { WebsocketService } from '../../services/websocket.service';
+import { WebsocketService } from '../../services/websocket.main.service';
 
 @Component({
   selector: 'croco-select-room',

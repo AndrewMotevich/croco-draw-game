@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  GameMessagesType,
   IWebSocketGameServer,
   WebsocketServerAction,
 } from '@croco/../libs/croco-common-interfaces';
@@ -12,11 +11,6 @@ import { Subject, fromEvent } from 'rxjs';
 export class WebsocketService {
   private mainWebSocket = new WebSocket('ws://localhost:8999/main');
 
-  private roomId = '';
-  private password = '';
-  private userName = '';
-
-  private gameWebSocket!: WebSocket;
   private mainWebsocketMessageObservable$ = fromEvent<MessageEvent>(
     this.mainWebSocket,
     'message'
@@ -65,28 +59,4 @@ export class WebsocketService {
     };
     this.mainWebSocket.send(JSON.stringify(message));
   }
-
-  // public newGameConnection(roomId: string, password: string, userName: string) {
-  //   this.roomId = roomId;
-  //   this.password = password;
-  //   this.userName = userName;
-  //   this.gameWebSocket = new WebSocket('ws://localhost:8999/room', {
-  //     headers: {
-  //       room_id: this.roomId,
-  //       password: this.password,
-  //       user_name: this.userName,
-  //     },
-  //   });
-  //   this.gameWebSocket.on('error', console.error);
-  //   this.gameWebSocket.on('message', function message(data) {
-  //     console.log('Game server received: %s', data);
-  //   });
-  //   return this.gameWebSocket;
-  // }
-
-  // public getPlayers() {
-  //   this.gameWebSocket.send(
-  //     JSON.stringify({ type: GameMessagesType.getPlayers })
-  //   );
-  // }
 }
