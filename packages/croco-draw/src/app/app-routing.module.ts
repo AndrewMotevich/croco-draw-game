@@ -5,12 +5,14 @@ import { HostPageComponent } from './croco/pages/host/host.page.component';
 import { ClientPageComponent } from './croco/pages/client/client.page.component';
 import { AboutPageComponent } from './croco/pages/about/about.page.component';
 import { NgModule } from '@angular/core';
+import { RoomPageComponent } from './croco/pages/room/room.page.component';
 
 export const appRoutes: Route[] = [
   { path: 'main', component: MainPageComponent },
   { path: 'about', component: AboutPageComponent },
   {
     path: 'room',
+    component: RoomPageComponent,
     children: [
       {
         path: 'host/:id',

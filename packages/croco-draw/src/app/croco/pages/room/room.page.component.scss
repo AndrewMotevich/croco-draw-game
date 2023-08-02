@@ -1,0 +1,16 @@
+.main-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background-image: url('../../../../assets/images/paint-spalsh.png');
+  background-repeat: repeat-x;
+  background-position: center top 20%;
+  background-size: 30%;
+  h2 {
+    margin: 0;
+  }
+}

@@ -1,0 +1,26 @@
+<main class="main-wrapper">
+  <h2>Room: {{roomName}}</h2>
+  <p-table
+    [columns]="cols"
+    [value]="items"
+    [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template
+      pTemplate="header"
+      let-columns>
+      <tr>
+        <th *ngFor="let col of columns">{{ col.header }}</th>
+      </tr>
+    </ng-template>
+    <ng-template
+      pTemplate="body"
+      let-rowData
+      let-columns="columns">
+      <tr>
+        <td *ngFor="let col of columns">{{ rowData[col.field] }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+  <p-button
+    icon="pi pi-check"
+    label="Ready"></p-button>
+</main>
