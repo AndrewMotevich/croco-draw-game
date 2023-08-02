@@ -4,7 +4,10 @@ import { generateErrorExpression } from '../../utils/generateErrorExpression';
 import { markAsDirty } from '../../utils/markAsDirty';
 import { WebsocketMainService } from '../../services/websocket.main.service';
 import { WebsocketGameService } from '../../services/websoket.game.service';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Router } from '@angular/router';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'croco-create-room',
   templateUrl: './create-room.component.html',
@@ -33,7 +36,8 @@ export class CreateRoomComponent {
 
   constructor(
     private mainWebsocketService: WebsocketMainService,
-    private gameWebsocketService: WebsocketGameService
+    private gameWebsocketService: WebsocketGameService,
+    private router: Router
   ) {}
 
   public submitCreateRoomForm() {
@@ -47,15 +51,15 @@ export class CreateRoomComponent {
       createRoomPassword.value,
       roomName.value
     );
-    this.mainWebsocketService.hostServerId$
-      .subscribe((id) => {
-        this.gameWebsocketService.setCredentials(
-          id,
-          createRoomPassword.value,
-          firstUserName.value
-        );
-      })
-      .unsubscribe();
+    this.mainWebsocketService.hostServerId$.subscribe((id) => {
+      this.gameWebsocketService.setCredentials(
+        id,
+        createRoomPassword.value,
+        firstUserName.value
+      );
+      this.gameWebsocketService.newGameConnection();
+      this.router.navigate(['/room']);
+    });
   }
 
   public showCreateRoomDialog() {

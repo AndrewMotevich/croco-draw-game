@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'croco-host.page',
@@ -7,13 +6,4 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./host.page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HostPageComponent implements OnInit {
-  constructor(private route: ActivatedRoute) {}
-
-  ngOnInit() {
-    this.route.params.subscribe((params) => {
-      console.log(params); //log the entire params object
-      console.log(params['id']); //log the value of id
-    });
-  }
-}
+export class HostPageComponent {}

@@ -2,7 +2,6 @@
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1rem;
@@ -13,4 +12,21 @@
   h2 {
     margin: 0;
   }
+}
+.room-container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background-color: rgba($color: #fff, $alpha: 0.7);
+  border-radius: 1rem;
+}
+.title-wrapper {
+  max-width: 35rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

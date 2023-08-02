@@ -29,4 +29,5 @@ export enum GameMessagesType {
   riddleWord = 'riddleWord',
   answer = 'answer',
   draw = 'draw',
+  order = 'order',
 }

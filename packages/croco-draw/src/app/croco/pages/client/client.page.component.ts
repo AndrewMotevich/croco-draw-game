@@ -3,7 +3,9 @@ import { generateErrorExpression } from '../../utils/generateErrorExpression';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { markAsDirty } from '../../utils/markAsDirty';
 import { MessageService } from 'primeng/api';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'croco-client.page',
   templateUrl: './client.page.component.html',
@@ -12,11 +14,11 @@ import { MessageService } from 'primeng/api';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientPageComponent {
-  errorExpression = generateErrorExpression;
-  riddleWord = 'answer';
-  isAnswerValid = false;
+  private riddleWord = 'answer';
+  public errorExpression = generateErrorExpression;
+  public isAnswerValid = false;
 
-  riddleWordFrom = new FormGroup({
+  public riddleWordFrom = new FormGroup({
     riddleWord: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required],
@@ -25,7 +27,7 @@ export class ClientPageComponent {
 
   constructor(private messageService: MessageService) {}
 
-  submitAnswer() {
+  public submitAnswer() {
     if (!this.riddleWordFrom.valid) {
       markAsDirty(this.riddleWordFrom.controls);
       return;
@@ -33,7 +35,7 @@ export class ClientPageComponent {
     this.compareAnswer(this.riddleWordFrom.controls.riddleWord.value);
   }
 
-  compareAnswer(answer: string) {
+  private compareAnswer(answer: string) {
     if (answer !== this.riddleWord) {
       this.messageService.add({
         severity: 'error',

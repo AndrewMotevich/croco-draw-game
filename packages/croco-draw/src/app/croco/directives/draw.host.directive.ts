@@ -7,7 +7,9 @@ import {
   drawWithFloodFill,
   drawWithPen,
 } from '../helpers/draw.helper';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+@UntilDestroy({ checkProperties: true })
 @Directive({
   selector: 'canvas[crocoDrawHost]',
   standalone: true,
@@ -21,7 +23,7 @@ export class DrawHostDirective implements OnInit {
 
   constructor(private canvas: ElementRef) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.initCanvas();
   }
 

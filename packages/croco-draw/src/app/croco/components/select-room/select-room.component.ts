@@ -5,8 +5,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { generateErrorExpression } from '../../utils/generateErrorExpression';
 import { WebsocketMainService } from '../../services/websocket.main.service';
 import { WebsocketGameService } from '../../services/websoket.game.service';
-import { MessageService } from 'primeng/api';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { Router } from '@angular/router';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'croco-select-room',
   templateUrl: './select-room.component.html',
@@ -43,10 +45,10 @@ export class SelectRoomComponent {
   constructor(
     private mainWebsocketService: WebsocketMainService,
     private gameWebsocketService: WebsocketGameService,
-    private messageService: MessageService
+    private router: Router
   ) {
     this.mainWebsocketService.serverList$.subscribe((list) => {
-      console.log(list);
+      this.gameRooms.length = 0;
       list.forEach((server) => {
         this.gameRooms.push({ name: server.serverName, roomId: server.roomId });
       });
@@ -65,15 +67,8 @@ export class SelectRoomComponent {
       selectRoomPassword.value,
       secondUserName.value
     );
-    try {
-      this.gameWebsocketService.newGameConnection();
-    } catch (err) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Server Error',
-        detail: 'Incorrect server',
-      });
-    }
+    this.gameWebsocketService.newGameConnection();
+    this.router.navigate(['/room']);
   }
 
   public filterRooms(event: AutoCompleteCompleteEvent) {
@@ -86,7 +81,6 @@ export class SelectRoomComponent {
         filtered.push(room);
       }
     }
-
     this.filteredGameRooms = filtered;
   }
 

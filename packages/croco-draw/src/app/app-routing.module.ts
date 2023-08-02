@@ -13,16 +13,14 @@ export const appRoutes: Route[] = [
   {
     path: 'room',
     component: RoomPageComponent,
-    children: [
-      {
-        path: 'host/:id',
-        component: HostPageComponent,
-      },
-      {
-        path: 'client/:id',
-        component: ClientPageComponent,
-      },
-    ],
+  },
+  {
+    path: 'host',
+    component: HostPageComponent,
+  },
+  {
+    path: 'client',
+    component: ClientPageComponent,
   },
   { path: '', redirectTo: 'main', pathMatch: 'full' },
   { path: '**', component: NotFoundPageComponent },

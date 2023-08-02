@@ -14,16 +14,16 @@ import { clearCanvas, saveCanvas } from '../../helpers/draw.helper';
   providers: [ConfirmationService],
 })
 export class PaintPanelComponent {
-  errorExpression = generateErrorExpression;
+  public errorExpression = generateErrorExpression;
 
-  riddleWord!: string;
+  public riddleWord!: string;
 
-  activeIcon: [string, { tool: DrawTools }] = [
+  public activeIcon: [string, { tool: DrawTools }] = [
     'pi pi-pencil',
     { tool: DrawTools.pen },
   ];
 
-  items = [
+  public items = [
     {
       icon: 'fa-solid fa-fill',
       command: () => {
@@ -50,14 +50,14 @@ export class PaintPanelComponent {
     },
   ];
 
-  riddleWordFrom = new FormGroup({
+  public riddleWordFrom = new FormGroup({
     riddleWord: new FormControl('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
   });
 
-  canvasToolsFrom = new FormGroup({
+  public canvasToolsFrom = new FormGroup({
     colorPicker: new FormControl('#000', {
       nonNullable: true,
       validators: [Validators.required],
@@ -70,7 +70,7 @@ export class PaintPanelComponent {
 
   constructor(private confirmationService: ConfirmationService) {}
 
-  confirm(event: Event) {
+  public confirm(event: Event) {
     this.confirmationService.confirm({
       target: event.target as EventTarget,
       message: 'Is this word correct and you want to submit it?',
@@ -85,11 +85,11 @@ export class PaintPanelComponent {
     });
   }
 
-  saveCanvas(canvas: HTMLCanvasElement) {
+  public saveCanvas(canvas: HTMLCanvasElement) {
     saveCanvas(canvas);
   }
 
-  clearCanvas(canvas: HTMLCanvasElement) {
+  public clearCanvas(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     clearCanvas(ctx);
   }

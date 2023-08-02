@@ -40,7 +40,9 @@ export function createNewGameServer(serverName: string, password: string) {
     };
     managePlayers(gameServer.server, players, ws, myPlayerInfo, order);
 
-    ws.on('error', console.error);
+    ws.on('error', (err) => {
+      alert(err);
+    });
     ws.on('message', (message) => {
       const parsedMessage = JSON.parse(message.toString()) as IGameRoomMessage;
       const payload = parsedMessage.payload;
@@ -56,11 +58,20 @@ export function createNewGameServer(serverName: string, password: string) {
 
         case GameMessagesType.ready:
           myPlayerInfo.ready = true;
-          if (players.first.ready && players.second.ready) {
+          if (players.first.ready && (players.second?.ready || false)) {
             gameServer.server.clients.forEach((client) => {
               client.send(JSON.stringify({ type: GameMessagesType.start }));
             });
-          } else ws.send(JSON.stringify({ type: GameMessagesType.pending }));
+          } else {
+            gameServer.server.clients.forEach((client) => {
+              client.send(
+                JSON.stringify({
+                  type: GameMessagesType.players,
+                  payload: players,
+                })
+              );
+            });
+          }
           break;
 
         case GameMessagesType.nextStep:
@@ -96,6 +107,15 @@ export function createNewGameServer(serverName: string, password: string) {
           }
           break;
 
+        case GameMessagesType.order:
+          ws.send(
+            JSON.stringify({
+              type: 'myUserObject',
+              myUserObject: myPlayerInfo,
+            })
+          );
+          break;
+
         case GameMessagesType.draw:
           gameServer.server.clients.forEach((client) => {
             client.send(message);
@@ -103,7 +123,22 @@ export function createNewGameServer(serverName: string, password: string) {
           break;
       }
     });
-    ws.send(JSON.stringify({ message: 'connected' }));
+    ws.send(
+      JSON.stringify({
+        type: 'serverInfo',
+        serverName: gameServer.serverName,
+        serverId: gameServer.roomId,
+        userOrder: myPlayerInfo.order,
+      })
+    );
+    gameServer.server.clients.forEach((client) => {
+      client.send(
+        JSON.stringify({
+          type: GameMessagesType.players,
+          payload: players,
+        })
+      );
+    });
   });
 
   websocketServersReducer(addServerAction(gameServer));

@@ -4,7 +4,7 @@ import {
   IGameRoomMessage,
   IPlayer,
 } from '@croco/../libs/croco-common-interfaces';
-import { Observable, Subject, fromEvent } from 'rxjs';
+import { Observable, fromEvent, BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -15,9 +15,15 @@ export class WebsocketGameService {
   private userName = '';
 
   private gameWebSocket!: WebSocket;
-  private gameWebSocketObservable!: Observable<MessageEvent>;
+  private messageObservable$!: Observable<MessageEvent>;
+  private errorObservable$!: Observable<MessageEvent>;
 
-  public players$ = new Subject<IPlayer[]>();
+  public onConnected$ = new BehaviorSubject<boolean>(false);
+  public players$ = new BehaviorSubject<IPlayer[]>([]);
+  public serverName$ = new BehaviorSubject<string>('Unknown');
+  public serverId$ = new BehaviorSubject<string>('');
+  public myUserObject$ = new Subject<IPlayer>();
+  public startGame$ = new BehaviorSubject<boolean>(false);
 
   public setCredentials(roomId: string, password: string, userName: string) {
     this.roomId = roomId;
@@ -26,33 +32,58 @@ export class WebsocketGameService {
   }
 
   public newGameConnection() {
-    try {
-      const params = `room_id=${this.roomId.toString()}&&password=${
-        this.password
-      }&&user_name=${this.userName}`;
-      const url = new URL(`ws://localhost:8999/room?${params}`);
-      this.gameWebSocket = new WebSocket(url);
-      this.gameWebSocketObservable = fromEvent<MessageEvent>(
-        this.gameWebSocket,
-        'message'
-      );
-      this.gameWebSocketObservable.subscribe((message) => {
-        const parsedMessage = JSON.parse(message.data) as IGameRoomMessage;
-        if (parsedMessage.type === GameMessagesType.players) {
-          this.players$.next(parsedMessage.payload as IPlayer[]);
-        }
-      });
-      this.gameWebSocket.addEventListener('error', () => {
-        alert('Wrong password');
-      });
-    } catch (error) {
-      throw new Error((error as Error).message);
-    }
+    const params = `room_id=${this.roomId.toString()}&&password=${
+      this.password
+    }&&user_name=${this.userName}`;
+    const url = new URL(`ws://localhost:8999/room?${params}`);
+    const newServer = new WebSocket(url);
+    this.gameWebSocket = newServer;
+    this.messageObservable$ = fromEvent<MessageEvent>(newServer, 'message');
+    this.errorObservable$ = fromEvent<MessageEvent>(newServer, 'error');
+    this.messageObservable$.subscribe((message) => {
+      const parsedMessage = JSON.parse(message.data) as IGameRoomMessage;
+      // message broker
+      console.log('game server', parsedMessage);
+      if (parsedMessage.type === GameMessagesType.players) {
+        this.players$.next(
+          Object.values(parsedMessage.payload as { [key: string]: IPlayer })
+        );
+      }
+      if (parsedMessage.type === GameMessagesType.start) {
+        this.startGame$.next(true);
+      }
+      if (JSON.parse(message.data).type === 'serverInfo') {
+        this.serverName$.next(JSON.parse(message.data).serverName);
+        this.serverId$.next(JSON.parse(message.data).serverId);
+        this.onConnected$.next(true);
+      }
+      if (JSON.parse(message.data).type === 'myUserObject') {
+        this.myUserObject$.next(JSON.parse(message.data).myUserObject);
+      }
+    });
+    this.errorObservable$.subscribe((error) => {
+      alert(error);
+    });
   }
 
   public getPlayers() {
-    this.gameWebSocket.send(
-      JSON.stringify({ type: GameMessagesType.getPlayers })
-    );
+    this.onConnected$.subscribe((value) => {
+      if (value) {
+        this.gameWebSocket.send(
+          JSON.stringify({ type: GameMessagesType.getPlayers })
+        );
+        this.gameWebSocket.send(
+          JSON.stringify({ type: GameMessagesType.order })
+        );
+      }
+    });
+  }
+
+  public myUserObject() {
+    this.gameWebSocket.send(JSON.stringify({ type: GameMessagesType.order }));
+  }
+
+  public readyToGame() {
+    this.gameWebSocket.send(JSON.stringify({ type: GameMessagesType.ready }));
   }
 }

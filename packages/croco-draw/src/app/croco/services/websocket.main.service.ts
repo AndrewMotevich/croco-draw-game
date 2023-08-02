@@ -32,16 +32,17 @@ export class WebsocketMainService {
         ).servers;
         this.serverList$.next(payload);
       }
-      if ((parsedMessage as { serverId: string }).serverId) {
-        this.hostServerId$.next(
-          (parsedMessage as { serverId: string }).serverId
-        );
+      if ((parsedMessage as { roomId: string }).roomId) {
+        this.hostServerId$.next((parsedMessage as { roomId: string }).roomId);
       }
     });
     this.mainWebSocket.addEventListener('open', () => {
       this.mainWebSocket.send(
         JSON.stringify({ type: WebsocketServerAction.serverList })
       );
+    });
+    this.mainWebSocket.addEventListener('error', () => {
+      alert('Failed connect to main server.\nTry to reload or visit later');
     });
   }
 
