@@ -6,6 +6,7 @@ import { MessageService } from 'primeng/api';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { WebsocketGameService } from '../../services/websoket.game.service';
 import { Router } from '@angular/router';
+import { WebsocketMainService } from '../../services/websocket.main.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -29,11 +30,22 @@ export class ClientPageComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
+    private mainWebsocketService: WebsocketMainService,
     private gameWebsocketServer: WebsocketGameService,
     private router: Router
   ) {}
 
   ngOnInit() {
+    this.mainWebsocketService.onMainConnect$.subscribe((isConnected) => {
+      if (!isConnected) {
+        this.router.navigate(['/main']);
+      }
+    });
+    this.gameWebsocketServer.onConnected$.subscribe((isConnected) => {
+      if (!isConnected) {
+        this.router.navigate(['/main']);
+      }
+    });
     this.gameWebsocketServer.answer$.subscribe((answer) => {
       this.riddleWord = answer;
     });
@@ -43,7 +55,6 @@ export class ClientPageComponent implements OnInit {
         this.router.navigate(['/host']);
       }
     });
-    this.gameWebsocketServer.results$.next(false);
     this.gameWebsocketServer.results$.subscribe((value) => {
       if (value) {
         this.router.navigate(['/room']);

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   GameMessagesType,
   IGameRoomMessage,
@@ -30,6 +31,8 @@ export class WebsocketGameService {
   public results$ = new BehaviorSubject<boolean>(false);
   public switchHost$ = new BehaviorSubject<boolean>(false);
   public next$ = new BehaviorSubject<boolean>(false);
+
+  constructor(private router: Router) {}
 
   public setCredentials(roomId: string, password: string, userName: string) {
     this.roomId = roomId;
@@ -73,14 +76,16 @@ export class WebsocketGameService {
       if (JSON.parse(message.data).type === 'serverInfo') {
         this.serverName$.next(JSON.parse(message.data).serverName);
         this.serverId$.next(JSON.parse(message.data).serverId);
+        this.results$.next(false);
         this.onConnected$.next(true);
+        this.router.navigate(['/room']);
       }
       if (JSON.parse(message.data).type === 'myUserObject') {
         this.myUserObject$.next(JSON.parse(message.data).myUserObject);
       }
     });
-    this.errorObservable$.subscribe((error) => {
-      alert(error);
+    this.errorObservable$.subscribe(() => {
+      this.onConnected$.next(false);
     });
   }
 

@@ -5,7 +5,6 @@ import { markAsDirty } from '../../utils/markAsDirty';
 import { WebsocketMainService } from '../../services/websocket.main.service';
 import { WebsocketGameService } from '../../services/websoket.game.service';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { Router } from '@angular/router';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -36,8 +35,7 @@ export class CreateRoomComponent {
 
   constructor(
     private mainWebsocketService: WebsocketMainService,
-    private gameWebsocketService: WebsocketGameService,
-    private router: Router
+    private gameWebsocketService: WebsocketGameService
   ) {}
 
   public submitCreateRoomForm() {
@@ -58,7 +56,6 @@ export class CreateRoomComponent {
         firstUserName.value
       );
       this.gameWebsocketService.newGameConnection();
-      this.router.navigate(['/room']);
     });
   }
 

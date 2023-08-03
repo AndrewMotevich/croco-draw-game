@@ -34,6 +34,8 @@ export class RoomPageComponent implements OnInit {
 
   public players: IPlayer[] = [];
 
+  private myPlayerInfo!: IPlayer;
+
   constructor(
     private mainWebsocketService: WebsocketMainService,
     private gameWebsocketService: WebsocketGameService,
@@ -43,26 +45,38 @@ export class RoomPageComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
+    this.mainWebsocketService.onMainConnect$.subscribe((isConnected) => {
+      if (!isConnected) {
+        this.router.navigate(['/main']);
+      }
+    });
+    this.gameWebsocketService.onConnected$.subscribe((isConnected) => {
+      if (!isConnected) {
+        this.router.navigate(['/main']);
+      }
+    });
+    this.gameWebsocketService.results$.subscribe((value) => {
+      if (value) {
+        this.disableReady = true;
+      }
+    });
     this.gameWebsocketService.getPlayers();
     this.gameWebsocketService.players$.subscribe((players) => {
       this.players = players;
-      this.changeDetection.detectChanges();
+      this.changeDetection.markForCheck();
     });
     this.gameWebsocketService.startGame$.next(false);
+    this.gameWebsocketService.myUserObject$.subscribe((me) => {
+      this.myPlayerInfo = me;
+    });
     this.gameWebsocketService.startGame$.subscribe((value) => {
       if (value) {
         this.gameWebsocketService.myUserObject();
-        this.startGame();
-      }
-    });
-  }
-
-  private startGame() {
-    this.gameWebsocketService.myUserObject$.subscribe((me) => {
-      if (me.order === UserOrder.first) {
-        this.router.navigate(['/host']);
-      } else if (me.order === UserOrder.second) {
-        this.router.navigate(['/client']);
+        if (this.myPlayerInfo.order === UserOrder.first) {
+          this.router.navigate(['/host']);
+        } else if (this.myPlayerInfo.order === UserOrder.second) {
+          this.router.navigate(['/client']);
+        }
       }
     });
   }

@@ -84,6 +84,7 @@ export function createNewGameServer(serverName: string, password: string) {
             myPlayerInfo.score += 1;
             game.gameQnt += 1;
           } else if (game.gameQnt === 5) {
+            myPlayerInfo.score += 1;
             gameServer.server.clients.forEach((client) => {
               players.first.ready = false;
               players.second.ready = false;

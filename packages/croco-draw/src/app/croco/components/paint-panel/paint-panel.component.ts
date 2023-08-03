@@ -12,6 +12,7 @@ import { DrawTools } from 'libs/croco-common-interfaces/src/lib/enums';
 import { clearCanvas, saveCanvas } from '../../helpers/draw.helper';
 import { WebsocketGameService } from '../../services/websoket.game.service';
 import { Router } from '@angular/router';
+import { WebsocketMainService } from '../../services/websocket.main.service';
 
 @Component({
   selector: 'croco-paint-panel',
@@ -80,9 +81,41 @@ export class PaintPanelComponent implements OnInit {
   constructor(
     private confirmationService: ConfirmationService,
     private gameWebsocketServer: WebsocketGameService,
+    private mainWebsocketService: WebsocketMainService,
     private router: Router,
     private changeDetection: ChangeDetectorRef
   ) {}
+
+  ngOnInit() {
+    this.mainWebsocketService.onMainConnect$.subscribe((isConnected) => {
+      if (!isConnected) {
+        this.router.navigate(['/main']);
+      }
+    });
+    this.gameWebsocketServer.onConnected$.subscribe((isConnected) => {
+      if (!isConnected) {
+        this.router.navigate(['/main']);
+      }
+    });
+    this.gameWebsocketServer.next$.next(false);
+    this.gameWebsocketServer.switchHost$.next(false);
+    this.gameWebsocketServer.switchHost$.subscribe((value) => {
+      if (value) {
+        this.router.navigate(['/client']);
+      }
+    });
+    this.gameWebsocketServer.next$.subscribe((value) => {
+      if (value) {
+        this.showCanvas = false;
+        this.changeDetection.detectChanges();
+      }
+    });
+    this.gameWebsocketServer.results$.subscribe((value) => {
+      if (value) {
+        this.router.navigate(['/room']);
+      }
+    });
+  }
 
   public confirm(event: Event) {
     this.confirmationService.confirm({
@@ -98,23 +131,6 @@ export class PaintPanelComponent implements OnInit {
         this.showCanvas = true;
         this.gameWebsocketServer.setRiddleWord(this.riddleWord);
       },
-    });
-  }
-
-  ngOnInit() {
-    this.gameWebsocketServer.next$.next(false);
-    this.gameWebsocketServer.switchHost$.next(false);
-    this.gameWebsocketServer.switchHost$.subscribe((value) => {
-      if (value) {
-        console.log('switch to client');
-        this.router.navigate(['/client']);
-      }
-    });
-    this.gameWebsocketServer.next$.subscribe((value) => {
-      if (value) {
-        this.showCanvas = false;
-        this.changeDetection.detectChanges();
-      }
     });
   }
 

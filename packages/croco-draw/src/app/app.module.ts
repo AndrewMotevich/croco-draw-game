@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './core/components/header/header.component';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { RoomPageModule } from './croco/pages/room/room.page.module';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +24,7 @@ import { RoomPageModule } from './croco/pages/room/room.page.module';
     HostPageModule,
     ClientPageModule,
     RoomPageModule,
+    ToastModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

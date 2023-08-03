@@ -3,7 +3,7 @@ import {
   IWebSocketGameServer,
   WebsocketServerAction,
 } from '@croco/../libs/croco-common-interfaces';
-import { Subject, fromEvent } from 'rxjs';
+import { BehaviorSubject, Subject, fromEvent } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +16,7 @@ export class WebsocketMainService {
     'message'
   );
 
+  public onMainConnect$ = new BehaviorSubject<boolean>(false);
   public serverList$ = new Subject<IWebSocketGameServer[]>();
   public hostServerId$ = new Subject<string>();
 
@@ -37,12 +38,13 @@ export class WebsocketMainService {
       }
     });
     this.mainWebSocket.addEventListener('open', () => {
+      this.onMainConnect$.next(true);
       this.mainWebSocket.send(
         JSON.stringify({ type: WebsocketServerAction.serverList })
       );
     });
     this.mainWebSocket.addEventListener('error', () => {
-      alert('Failed connect to main server.\nTry to reload or visit later');
+      this.onMainConnect$.next(false);
     });
   }
 

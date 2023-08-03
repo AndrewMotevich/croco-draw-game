@@ -6,7 +6,6 @@ import { generateErrorExpression } from '../../utils/generateErrorExpression';
 import { WebsocketMainService } from '../../services/websocket.main.service';
 import { WebsocketGameService } from '../../services/websoket.game.service';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { Router } from '@angular/router';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -44,8 +43,7 @@ export class SelectRoomComponent {
 
   constructor(
     private mainWebsocketService: WebsocketMainService,
-    private gameWebsocketService: WebsocketGameService,
-    private router: Router
+    private gameWebsocketService: WebsocketGameService
   ) {
     this.mainWebsocketService.serverList$.subscribe((list) => {
       this.gameRooms.length = 0;
@@ -68,7 +66,6 @@ export class SelectRoomComponent {
       secondUserName.value
     );
     this.gameWebsocketService.newGameConnection();
-    this.router.navigate(['/room']);
   }
 
   public filterRooms(event: AutoCompleteCompleteEvent) {

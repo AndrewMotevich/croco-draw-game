@@ -11,7 +11,6 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { TooltipModule } from 'primeng/tooltip';
-import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [MainPageComponent, CreateRoomComponent, SelectRoomComponent],
@@ -25,7 +24,6 @@ import { ToastModule } from 'primeng/toast';
     AutoCompleteModule,
     TooltipModule,
     InputTextModule,
-    ToastModule,
   ],
   exports: [ButtonModule],
 })
