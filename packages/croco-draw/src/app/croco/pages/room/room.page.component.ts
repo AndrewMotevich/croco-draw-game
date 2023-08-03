@@ -72,9 +72,9 @@ export class RoomPageComponent implements OnInit {
     this.gameWebsocketService.startGame$.subscribe((value) => {
       if (value) {
         this.gameWebsocketService.myUserObject();
-        if (this.myPlayerInfo.order === UserOrder.first) {
+        if (this.myPlayerInfo.host) {
           this.router.navigate(['/host']);
-        } else if (this.myPlayerInfo.order === UserOrder.second) {
+        } else if (!this.myPlayerInfo.host) {
           this.router.navigate(['/client']);
         }
       }

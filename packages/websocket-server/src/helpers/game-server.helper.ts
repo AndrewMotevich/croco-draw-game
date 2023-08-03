@@ -16,18 +16,26 @@ export function managePlayers(
   if (server.clients.size >= 3) {
     ws.close();
   } else if (server.clients.size === 2) {
-    if (order.has(players.first)) {
-      players.second = myInfo;
-      myInfo.order = UserOrder.second;
-      myInfo.ready = false;
-      order.add(players.second);
-    } else if (order.has(players.second)) {
+    if (order.has(players.second) && myInfo.name === players.first.name) {
       players.first = myInfo;
       myInfo.order = UserOrder.first;
       myInfo.ready = false;
       myInfo.host = !players.second.host;
-      order.add({ order: UserOrder.first });
-    }
+      order.add(players.first);
+    } else if (
+      order.has(players.second) &&
+      myInfo.name === players?.second?.name
+    ) {
+      players.second = myInfo;
+      myInfo.order = UserOrder.second;
+      myInfo.ready = false;
+      order.add(players.second);
+    } else if (!order.has(players.second)) {
+      players.second = myInfo;
+      myInfo.order = UserOrder.second;
+      myInfo.ready = false;
+      order.add(players.second);
+    } else ws.close();
   } else {
     players.first = myInfo;
     myInfo.order = UserOrder.first;

@@ -41,7 +41,7 @@ export function createNewGameServer(serverName: string, password: string) {
     managePlayers(gameServer.server, players, ws, myPlayerInfo, order, game);
 
     ws.on('error', (err) => {
-      alert(err);
+      console.log(err);
     });
     ws.on('message', (message) => {
       const parsedMessage = JSON.parse(message.toString()) as IGameRoomMessage;
@@ -76,6 +76,8 @@ export function createNewGameServer(serverName: string, password: string) {
 
         case GameMessagesType.nextStep:
           if (game.gameQnt === 2) {
+            players.first.host = !players.first.host;
+            players.second.host = !players.second.host;
             gameServer.server.clients.forEach((client) => {
               client.send(
                 JSON.stringify({ type: GameMessagesType.switchHost })
