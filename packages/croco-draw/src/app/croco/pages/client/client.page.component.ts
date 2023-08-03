@@ -88,18 +88,18 @@ export class ClientPageComponent implements OnInit {
       });
       if (this.attemptsQnt <= 1) {
         this.attemptsQnt = 3;
-        this.nextStep();
+        this.nextStep(false);
         return;
       }
       this.attemptsQnt -= 1;
       return;
     }
-    this.nextStep();
+    this.nextStep(true);
   }
 
-  private nextStep() {
+  private nextStep(success: boolean) {
     this.riddleWordFrom.reset();
-    this.gameWebsocketServer.nextStep();
+    this.gameWebsocketServer.nextStep(success);
     this.canvas.nativeElement.getContext('2d')?.clearRect(0, 0, 500, 500);
   }
 }

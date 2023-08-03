@@ -76,6 +76,7 @@ export function createNewGameServer(serverName: string, password: string) {
 
         case GameMessagesType.nextStep:
           if (game.gameQnt === 2) {
+            const success = (payload as { success: boolean }).success;
             players.first.host = !players.first.host;
             players.second.host = !players.second.host;
             gameServer.server.clients.forEach((client) => {
@@ -83,17 +84,19 @@ export function createNewGameServer(serverName: string, password: string) {
                 JSON.stringify({ type: GameMessagesType.switchHost })
               );
             });
-            myPlayerInfo.score += 1;
+            if (success) myPlayerInfo.score += 1;
             game.gameQnt += 1;
           } else if (game.gameQnt === 5) {
-            myPlayerInfo.score += 1;
+            const success = (payload as { success: boolean }).success;
+            if (success) myPlayerInfo.score += 1;
             gameServer.server.clients.forEach((client) => {
               players.first.ready = false;
               players.second.ready = false;
               client.send(JSON.stringify({ type: GameMessagesType.results }));
             });
           } else {
-            myPlayerInfo.score += 1;
+            const success = (payload as { success: boolean }).success;
+            if (success) myPlayerInfo.score += 1;
             game.gameQnt += 1;
             gameServer.server.clients.forEach((client) => {
               client.send(JSON.stringify({ type: GameMessagesType.next }));

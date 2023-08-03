@@ -118,9 +118,9 @@ export class WebsocketGameService {
     this.gameWebSocket.send(JSON.stringify({ type: GameMessagesType.ready }));
   }
 
-  public nextStep() {
+  public nextStep(success: boolean) {
     this.gameWebSocket.send(
-      JSON.stringify({ type: GameMessagesType.nextStep })
+      JSON.stringify({ type: GameMessagesType.nextStep, payload: { success } })
     );
   }
 
