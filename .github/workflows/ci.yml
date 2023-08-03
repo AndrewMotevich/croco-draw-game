@@ -13,9 +13,10 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-      - run: npm install
 
       - uses: mansagroup/nrwl-nx-action@v3
         with:
           targets: lint,test,build
           all: 'true'
+
+      - run: npm install
