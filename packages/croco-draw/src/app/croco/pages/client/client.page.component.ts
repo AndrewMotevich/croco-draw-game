@@ -28,6 +28,7 @@ export class ClientPageComponent implements OnInit {
   private riddleWord = 'answer';
   public errorExpression = generateErrorExpression;
   public isAnswerValid = false;
+  public attemptsQnt = 3;
 
   public riddleWordFrom = new FormGroup({
     riddleWord: new FormControl('', {
@@ -85,8 +86,18 @@ export class ClientPageComponent implements OnInit {
         summary: 'Error',
         detail: 'Wrong answer',
       });
+      if (this.attemptsQnt <= 1) {
+        this.attemptsQnt = 3;
+        this.nextStep();
+        return;
+      }
+      this.attemptsQnt -= 1;
       return;
     }
+    this.nextStep();
+  }
+
+  private nextStep() {
     this.riddleWordFrom.reset();
     this.gameWebsocketServer.nextStep();
     this.canvas.nativeElement.getContext('2d')?.clearRect(0, 0, 500, 500);

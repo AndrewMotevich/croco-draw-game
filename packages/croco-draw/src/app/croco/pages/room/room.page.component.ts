@@ -24,6 +24,7 @@ export class RoomPageComponent implements OnInit {
   private roomId = this.gameWebsocketService.serverId$;
 
   public disableReady = false;
+  public myName = '';
 
   public cols = [
     { field: 'name', header: 'Name' },
@@ -34,7 +35,7 @@ export class RoomPageComponent implements OnInit {
 
   public players: IPlayer[] = [];
 
-  private myPlayerInfo!: IPlayer;
+  public myPlayerInfo!: IPlayer;
 
   constructor(
     private mainWebsocketService: WebsocketMainService,
@@ -67,7 +68,9 @@ export class RoomPageComponent implements OnInit {
     });
     this.gameWebsocketService.startGame$.next(false);
     this.gameWebsocketService.myUserObject$.subscribe((me) => {
+      this.myName = me.name;
       this.myPlayerInfo = me;
+      this.changeDetection.markForCheck();
     });
     this.gameWebsocketService.startGame$.subscribe((value) => {
       if (value) {

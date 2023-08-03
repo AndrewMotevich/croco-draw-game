@@ -9,7 +9,6 @@ import {
 } from '@croco/../libs/croco-common-interfaces';
 import { Observable, fromEvent, BehaviorSubject, Subject } from 'rxjs';
 import { IDrawMessage } from '../../../../../../dist/libs/croco-common-interfaces/src/lib/interfaces';
-import { JsonPipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',

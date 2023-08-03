@@ -7,11 +7,11 @@
         pInputText
         placeholder="Keyword"
         formControlName="riddleWord">
-      <button
+      <p-button
         type="button"
-        pButton
         label="Submit"
-        (click)="submitAnswer()"></button>
+        [badge]="attemptsQnt.toString()"
+        (click)="submitAnswer()"></p-button>
     </div>
     <small
       class="error"

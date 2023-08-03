@@ -37,6 +37,9 @@ export function managePlayers(
       order.add(players.second);
     } else ws.close();
   } else {
+    if (order.has(players.second)) {
+      players.second = null;
+    }
     players.first = myInfo;
     myInfo.order = UserOrder.first;
     myInfo.host = true;

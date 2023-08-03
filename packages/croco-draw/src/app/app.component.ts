@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
       this.messageService.add({
         severity: 'success',
         summary: 'Success',
-        detail: 'Connection to GAME server is successful!',
+        detail: 'Connection to MAIN server is successful!',
       });
     });
     this.gameWebsocketService.onConnected$.subscribe((isConnected) => {

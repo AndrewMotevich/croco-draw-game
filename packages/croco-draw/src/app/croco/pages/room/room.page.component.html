@@ -19,10 +19,17 @@
       </ng-template>
       <ng-template
         pTemplate="body"
-        let-rowData
+        let-player
         let-columns="columns">
-        <tr>
-          <td *ngFor="let col of columns">{{ rowData[col.field] }}</td>
+        <tr [ngClass]="{'row-highlight': player.name === myName}">
+          <td>{{ player.name }}</td>
+          <td>{{ player.host }}</td>
+          <td>{{ player.score }}</td>
+          <td>
+            <p-tag
+              [severity]="player.ready | readyTagStyle"
+              [value]="player.ready"></p-tag>
+          </td>
         </tr>
       </ng-template>
     </p-table>
