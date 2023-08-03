@@ -9,6 +9,12 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '17'
+          cache: 'npm'
+      - run: npm install
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -17,5 +23,3 @@ jobs:
         with:
           targets: lint,test,build
           all: 'true'
-
-      - run: npm install
