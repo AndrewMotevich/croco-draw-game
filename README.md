@@ -5,7 +5,10 @@ The goal of the first player is make a riddle-word and try to draw this word.
 
 Second player must guess the word.
 
-# Deployment: [Link]()
+![image](https://github.com/AndrewMotevich/croco-draw-game/assets/101500007/5e599086-a292-4e77-a4b8-5855f5a44cb3)
+
+
+# Deployment: [Link](https://croco-draw-game.vercel.app/main)
 
 # App Features:
 
