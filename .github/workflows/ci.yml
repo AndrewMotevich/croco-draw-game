@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - uses: nrwl/nx-set-shas@v3
+      - uses: MansaGroup/nrwl-nx-action@v3.2.2
       - run: npm ci
 
       - run: npx nx format:check
