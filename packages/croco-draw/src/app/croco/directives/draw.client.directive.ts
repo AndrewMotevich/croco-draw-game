@@ -32,11 +32,11 @@ export class DrawClientDirective implements OnInit {
         '2d'
       ) as CanvasRenderingContext2D;
       const { color, size: range, tool } = message.toolOptions;
-      const coordinate = message.coordinate || {
+      const coordinate = message.position || {
         from: { x: 0, y: 0 },
         to: { x: 0, y: 0 },
       };
-      const mousePosition = message.mousePosition || { x: 0, y: 0 };
+      const mousePosition = message.fillCoordinate || { x: 0, y: 0 };
       if (tool === DrawTools.pen) {
         drawWithPen(ctx, coordinate, color, range);
       } else if (tool === DrawTools.brush) {
