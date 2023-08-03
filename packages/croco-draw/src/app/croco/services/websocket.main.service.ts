@@ -3,13 +3,14 @@ import {
   IWebSocketGameServer,
   WebsocketServerAction,
 } from '@croco/../libs/croco-common-interfaces';
+import { environment } from 'packages/croco-draw/src/environments/environment';
 import { BehaviorSubject, Subject, fromEvent } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebsocketMainService {
-  private mainWebSocket = new WebSocket('ws://localhost:8999/main');
+  private mainWebSocket = new WebSocket(environment.mainServerPath);
 
   private mainWebsocketMessageObservable$ = fromEvent<MessageEvent>(
     this.mainWebSocket,

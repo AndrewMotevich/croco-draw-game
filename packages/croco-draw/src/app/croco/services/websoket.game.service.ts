@@ -9,6 +9,7 @@ import {
 } from '@croco/../libs/croco-common-interfaces';
 import { Observable, fromEvent, BehaviorSubject, Subject } from 'rxjs';
 import { IDrawPayload } from '@croco/../libs/croco-common-interfaces';
+import { environment } from 'packages/croco-draw/src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -48,7 +49,7 @@ export class WebsocketGameService {
     const params = `room_id=${this.roomId.toString()}&&password=${
       this.password
     }&&user_name=${this.userName}`;
-    const url = new URL(`ws://localhost:8999/room?${params}`);
+    const url = new URL(environment.gameServerPath + params);
     const newServer = new WebSocket(url);
     this.gameWebSocket = newServer;
     this.messageObservable$ = fromEvent<MessageEvent>(newServer, 'message');
