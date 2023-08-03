@@ -1,48 +1,21 @@
-image: node:18
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
-stages:
-  - test
-  - build
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: nrwl/nx-set-shas@v3
+      - run: npm ci
 
-.distributed:
-  interruptible: true
-  only:
-    - main
-    - merge_requests
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - .npm/
-  before_script:
-    - npm ci --cache .npm --prefer-offline
-    - NX_HEAD=$CI_COMMIT_SHA
-    - NX_BASE=${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}
-
-variables:
-  GIT_DEPTH: 0
-
-format-check:
-  stage: test
-  extends: .distributed
-  script:
-    - npx nx format:check --base=$NX_BASE --head=$NX_HEAD
-
-lint:
-  stage: test
-  extends: .distributed
-  script:
-    - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t lint --parallel=3
-
-test:
-  stage: test
-  extends: .distributed
-  script:
-    - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t test --parallel=3 --configuration=ci
-
-build:
-  stage: build
-  extends: .distributed
-  script:
-    - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t build --parallel=3
+      - run: npx nx format:check
+      - run: npx nx affected -t lint --parallel=3
+      - run: npx nx affected -t test --parallel=3 --configuration=ci
+      - run: npx nx affected -t build --parallel=3
