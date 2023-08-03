@@ -8,7 +8,7 @@ import {
   IPlayer,
 } from '@croco/../libs/croco-common-interfaces';
 import { Observable, fromEvent, BehaviorSubject, Subject } from 'rxjs';
-import { IDrawMessage } from '../../../../../../dist/libs/croco-common-interfaces/src/lib/interfaces';
+import { IDrawPayload } from '@croco/../libs/croco-common-interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +26,7 @@ export class WebsocketGameService {
   public serverId$ = new BehaviorSubject<string>('');
 
   public myUserObject$ = new Subject<IPlayer>();
-  public drawMessages$ = new Subject<IDrawMessage>();
+  public drawMessages$ = new Subject<IDrawPayload>();
   public players$ = new BehaviorSubject<IPlayer[]>([]);
   public answer$ = new BehaviorSubject<string>('');
 
@@ -139,9 +139,9 @@ export class WebsocketGameService {
     tool: DrawTools,
     coordinate: IMousePosition
   ) {
-    const drawMessage: { type: GameMessagesType; payload: IDrawMessage } = {
+    const drawMessage: { type: GameMessagesType; payload: IDrawPayload } = {
       type: GameMessagesType.draw,
-      payload: { toolOptions: { color, size, tool }, coordinate },
+      payload: { toolOptions: { color, size, tool }, position: coordinate },
     };
     this.gameWebSocket.send(JSON.stringify(drawMessage));
   }
@@ -151,11 +151,11 @@ export class WebsocketGameService {
     size: number,
     mousePosition: { x: number; y: number }
   ) {
-    const drawMessage: { type: GameMessagesType; payload: IDrawMessage } = {
+    const drawMessage: { type: GameMessagesType; payload: IDrawPayload } = {
       type: GameMessagesType.draw,
       payload: {
         toolOptions: { color, size, tool: DrawTools.fill },
-        mousePosition,
+        fillCoordinate: mousePosition,
       },
     };
     this.gameWebSocket.send(JSON.stringify(drawMessage));
