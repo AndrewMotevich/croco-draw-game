@@ -8,6 +8,7 @@ import {
   drawWithPen,
 } from '../helpers/draw.helper';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { WebsocketGameService } from '../services/websoket.game.service';
 
 @UntilDestroy({ checkProperties: true })
 @Directive({
@@ -21,7 +22,10 @@ export class DrawHostDirective implements OnInit {
   @Input() public clear = false;
   @Input() public save = false;
 
-  constructor(private canvas: ElementRef) {}
+  constructor(
+    private canvas: ElementRef,
+    private gameWebsocketService: WebsocketGameService
+  ) {}
 
   public ngOnInit(): void {
     this.initCanvas();
@@ -65,6 +69,12 @@ export class DrawHostDirective implements OnInit {
       } else if (this.tool === DrawTools.eraser) {
         drawWithEraser(ctx, res, this.range);
       }
+      this.gameWebsocketService.sendDrawMessage(
+        this.color,
+        this.range,
+        this.tool,
+        res
+      );
     });
 
     fill$.subscribe((res) => {
@@ -73,6 +83,7 @@ export class DrawHostDirective implements OnInit {
       ) as CanvasRenderingContext2D;
       if (this.tool === DrawTools.fill) {
         drawWithFloodFill(ctx, res, this.color);
+        this.gameWebsocketService.sendFillMessage(this.color, this.range, res);
       }
     });
   }

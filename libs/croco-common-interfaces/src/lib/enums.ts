@@ -3,6 +3,7 @@ export enum DrawTools {
   eraser = 'eraser',
   fill = 'fill',
   brush = 'brush',
+  clear = 'clear',
 }
 
 export enum UserOrder {

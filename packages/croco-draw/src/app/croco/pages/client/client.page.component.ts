@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { generateErrorExpression } from '../../utils/generateErrorExpression';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { markAsDirty } from '../../utils/markAsDirty';
@@ -17,6 +23,8 @@ import { WebsocketMainService } from '../../services/websocket.main.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientPageComponent implements OnInit {
+  @ViewChild('canvas') private canvas!: ElementRef<HTMLCanvasElement>;
+
   private riddleWord = 'answer';
   public errorExpression = generateErrorExpression;
   public isAnswerValid = false;
@@ -81,6 +89,6 @@ export class ClientPageComponent implements OnInit {
     }
     this.riddleWordFrom.reset();
     this.gameWebsocketServer.nextStep();
-    // clear canvas
+    this.canvas.nativeElement.getContext('2d')?.clearRect(0, 0, 500, 500);
   }
 }

@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
+  DrawTools,
   GameMessagesType,
   IGameRoomMessage,
+  IMousePosition,
   IPlayer,
 } from '@croco/../libs/croco-common-interfaces';
 import { Observable, fromEvent, BehaviorSubject, Subject } from 'rxjs';
+import { IDrawMessage } from '../../../../../../dist/libs/croco-common-interfaces/src/lib/interfaces';
+import { JsonPipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +27,7 @@ export class WebsocketGameService {
   public serverId$ = new BehaviorSubject<string>('');
 
   public myUserObject$ = new Subject<IPlayer>();
+  public drawMessages$ = new Subject<IDrawMessage>();
   public players$ = new BehaviorSubject<IPlayer[]>([]);
   public answer$ = new BehaviorSubject<string>('');
 
@@ -83,6 +88,10 @@ export class WebsocketGameService {
       if (JSON.parse(message.data).type === 'myUserObject') {
         this.myUserObject$.next(JSON.parse(message.data).myUserObject);
       }
+      if (JSON.parse(message.data).type === 'drawMessage') {
+        const drawMessage = JSON.parse(message.data).message;
+        this.drawMessages$.next(JSON.parse(drawMessage).payload);
+      }
     });
     this.errorObservable$.subscribe(() => {
       this.onConnected$.next(false);
@@ -123,5 +132,33 @@ export class WebsocketGameService {
         payload: { riddleWord: riddleWord },
       })
     );
+  }
+
+  public sendDrawMessage(
+    color: string,
+    size: number,
+    tool: DrawTools,
+    coordinate: IMousePosition
+  ) {
+    const drawMessage: { type: GameMessagesType; payload: IDrawMessage } = {
+      type: GameMessagesType.draw,
+      payload: { toolOptions: { color, size, tool }, coordinate },
+    };
+    this.gameWebSocket.send(JSON.stringify(drawMessage));
+  }
+
+  public sendFillMessage(
+    color: string,
+    size: number,
+    mousePosition: { x: number; y: number }
+  ) {
+    const drawMessage: { type: GameMessagesType; payload: IDrawMessage } = {
+      type: GameMessagesType.draw,
+      payload: {
+        toolOptions: { color, size, tool: DrawTools.fill },
+        mousePosition,
+      },
+    };
+    this.gameWebSocket.send(JSON.stringify(drawMessage));
   }
 }

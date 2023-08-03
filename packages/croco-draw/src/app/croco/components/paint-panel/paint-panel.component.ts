@@ -141,5 +141,9 @@ export class PaintPanelComponent implements OnInit {
   public clearCanvas(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     clearCanvas(ctx);
+    this.gameWebsocketServer.sendDrawMessage('', 0, DrawTools.clear, {
+      from: { x: 0, y: 0 },
+      to: { x: 0, y: 0 },
+    });
   }
 }

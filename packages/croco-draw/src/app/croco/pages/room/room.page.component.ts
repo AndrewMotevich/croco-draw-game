@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { WebsocketGameService } from '../../services/websoket.game.service';
-import { IPlayer, UserOrder } from '@croco/../libs/croco-common-interfaces';
+import { IPlayer } from '@croco/../libs/croco-common-interfaces';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { WebsocketMainService } from '../../services/websocket.main.service';
 import { Router } from '@angular/router';

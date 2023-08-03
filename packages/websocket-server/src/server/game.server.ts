@@ -124,7 +124,12 @@ export function createNewGameServer(serverName: string, password: string) {
 
         case GameMessagesType.draw:
           gameServer.server.clients.forEach((client) => {
-            client.send(message);
+            client.send(
+              JSON.stringify({
+                type: 'drawMessage',
+                message: message.toString(),
+              })
+            );
           });
           break;
       }
