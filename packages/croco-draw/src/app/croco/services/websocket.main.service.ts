@@ -3,7 +3,7 @@ import {
   IWebSocketGameServer,
   WebsocketServerAction,
 } from '@croco/../libs/croco-common-interfaces';
-import { environment } from 'packages/croco-draw/src/environments/environment';
+import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Subject, fromEvent } from 'rxjs';
 
 @Injectable({

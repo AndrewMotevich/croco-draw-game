@@ -9,7 +9,7 @@ import {
 } from '@croco/../libs/croco-common-interfaces';
 import { Observable, fromEvent, BehaviorSubject, Subject } from 'rxjs';
 import { IDrawPayload } from '@croco/../libs/croco-common-interfaces';
-import { environment } from 'packages/croco-draw/src/environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
