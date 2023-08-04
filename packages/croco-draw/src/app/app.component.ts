@@ -2,6 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { WebsocketMainService } from './croco/services/websocket.main.service';
 import { WebsocketGameService } from './croco/services/websoket.game.service';
+import {
+  FailedConnectionToMain,
+  SuccessConnectionToMain,
+} from '../messages/main-server.messages';
+import {
+  FailedConnectionToGame,
+  SuccessConnectionToGame,
+} from '../messages/game-server.messages';
 
 @Component({
   selector: 'croco-root',
@@ -21,35 +29,17 @@ export class AppComponent implements OnInit {
     this.primengConfig.ripple = true;
     this.mainWebsocketService.onMainConnect$.subscribe((isConnected) => {
       if (!isConnected) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail:
-            'Connection to MAIN server failed. Please, reload page or try later',
-        });
+        this.messageService.add(FailedConnectionToMain);
         return;
       }
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Success',
-        detail: 'Connection to MAIN server is successful!',
-      });
+      this.messageService.add(SuccessConnectionToMain);
     });
     this.gameWebsocketService.onConnected$.subscribe((isConnected) => {
       if (!isConnected) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail:
-            'Connection to GAME server failed. Possible options: check password, create new game, reload page or try later',
-        });
+        this.messageService.add(FailedConnectionToGame);
         return;
       }
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Success',
-        detail: 'Connection to GAME server is successful!',
-      });
+      this.messageService.add(SuccessConnectionToGame);
     });
   }
 }

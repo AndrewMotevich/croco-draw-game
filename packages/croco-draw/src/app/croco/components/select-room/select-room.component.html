@@ -30,6 +30,11 @@
       *ngIf="errorExpression('required', selectRoomForm.controls.secondUserName)">
       User name is required.
     </small>
+    <small
+      class="error"
+      *ngIf="errorExpression('pattern', selectRoomForm.controls.secondUserName)">
+      No spaces, special characters (allowed: "-" and "_")
+    </small>
 
     <p-autoComplete
       class="p-inputtext-lg"

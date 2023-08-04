@@ -19,6 +19,11 @@
         *ngIf="errorExpression('required', riddleWordFrom.controls.riddleWord)">
         Riddle word is required
       </small>
+      <small
+        class="error"
+        *ngIf="errorExpression('pattern', riddleWordFrom.controls.riddleWord)">
+        No spaces, special characters (allowed: "-" and "_")
+      </small>
       <p-confirmPopup></p-confirmPopup>
     </form>
   </ng-template>
@@ -77,3 +82,4 @@
     </div>
   </ng-template>
 </div>
+<p-toast></p-toast>

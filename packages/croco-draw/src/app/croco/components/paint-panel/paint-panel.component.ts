@@ -6,20 +6,22 @@ import {
 } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { markAsDirty } from '../../utils/markAsDirty';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { generateErrorExpression } from '../../utils/generateErrorExpression';
 import { DrawTools } from 'libs/croco-common-interfaces/src/lib/enums';
 import { clearCanvas, saveCanvas } from '../../helpers/draw.helper';
 import { WebsocketGameService } from '../../services/websoket.game.service';
 import { Router } from '@angular/router';
 import { WebsocketMainService } from '../../services/websocket.main.service';
+import { NextStepInfo } from '../../../../messages/host.messages';
+import { RiddleWordValidationRegex } from '../../constants/constants';
 
 @Component({
   selector: 'croco-paint-panel',
   templateUrl: './paint-panel.component.html',
   styleUrls: ['./paint-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, MessageService],
 })
 export class PaintPanelComponent implements OnInit {
   public errorExpression = generateErrorExpression;
@@ -63,7 +65,10 @@ export class PaintPanelComponent implements OnInit {
   public riddleWordFrom = new FormGroup({
     riddleWord: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [
+        Validators.required,
+        Validators.pattern(RiddleWordValidationRegex),
+      ],
     }),
   });
 
@@ -83,7 +88,8 @@ export class PaintPanelComponent implements OnInit {
     private gameWebsocketServer: WebsocketGameService,
     private mainWebsocketService: WebsocketMainService,
     private router: Router,
-    private changeDetection: ChangeDetectorRef
+    private changeDetection: ChangeDetectorRef,
+    private messageService: MessageService
   ) {}
 
   ngOnInit() {
@@ -106,6 +112,7 @@ export class PaintPanelComponent implements OnInit {
     });
     this.gameWebsocketServer.next$.subscribe((value) => {
       if (value) {
+        this.messageService.add(NextStepInfo);
         this.showCanvas = false;
         this.changeDetection.detectChanges();
       }

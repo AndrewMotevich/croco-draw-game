@@ -11,6 +11,7 @@ import { ColorPickerModule } from 'primeng/colorpicker';
 import { SliderModule } from 'primeng/slider';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { DrawHostDirective } from '../../directives/draw.host.directive';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [HostPageComponent, PaintPanelComponent],
@@ -25,6 +26,7 @@ import { DrawHostDirective } from '../../directives/draw.host.directive';
     SliderModule,
     SpeedDialModule,
     DrawHostDirective,
+    ToastModule,
   ],
 })
 export class HostPageModule {}

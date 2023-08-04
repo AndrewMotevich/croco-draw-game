@@ -5,6 +5,7 @@ import { markAsDirty } from '../../utils/markAsDirty';
 import { WebsocketMainService } from '../../services/websocket.main.service';
 import { WebsocketGameService } from '../../services/websoket.game.service';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { TextFieldValidationRegex } from '../../constants/constants';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -21,11 +22,17 @@ export class CreateRoomComponent {
   public createRoomForm = new FormGroup({
     firstUserName: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [
+        Validators.required,
+        Validators.pattern(TextFieldValidationRegex),
+      ],
     }),
     roomName: new FormControl('', {
       nonNullable: true,
-      validators: [Validators.required],
+      validators: [
+        Validators.required,
+        Validators.pattern(TextFieldValidationRegex),
+      ],
     }),
     createRoomPassword: new FormControl('', {
       nonNullable: true,

@@ -7,6 +7,12 @@ Second player must guess the word.
 
 # Deployment: [Link](https://croco-draw-game.vercel.app/main)
 
+## Run localy:
+```
+npm install
+npx nx run-many --target=serve --all=true
+````
+
 # App Features:
 
 - Real time drawing with floodFill and other basic tools

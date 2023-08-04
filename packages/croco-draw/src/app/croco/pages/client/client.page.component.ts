@@ -13,6 +13,11 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { WebsocketGameService } from '../../services/websoket.game.service';
 import { Router } from '@angular/router';
 import { WebsocketMainService } from '../../services/websocket.main.service';
+import {
+  ShowRightAnswer,
+  SuccessAnswer,
+  WrongAnswer,
+} from '../../../../messages/client.messages';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -80,20 +85,19 @@ export class ClientPageComponent implements OnInit {
   }
 
   private compareAnswer(answer: string) {
-    if (answer !== this.riddleWord) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Wrong answer',
-      });
+    if (answer.toLocaleLowerCase() !== this.riddleWord.toLocaleLowerCase()) {
+      this.messageService.add(WrongAnswer);
       if (this.attemptsQnt <= 1) {
         this.attemptsQnt = 3;
+        this.messageService.add(ShowRightAnswer(this.riddleWord));
         this.nextStep(false);
         return;
       }
       this.attemptsQnt -= 1;
       return;
     }
+    this.messageService.add(SuccessAnswer);
+    this.attemptsQnt = 3;
     this.nextStep(true);
   }
 

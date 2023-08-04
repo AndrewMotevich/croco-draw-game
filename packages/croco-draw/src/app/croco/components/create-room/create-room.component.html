@@ -30,6 +30,11 @@
       *ngIf="errorExpression('required', createRoomForm.controls.firstUserName)">
       Username is required.
     </small>
+    <small
+      class="error"
+      *ngIf="errorExpression('pattern', createRoomForm.controls.firstUserName)">
+      No spaces, special characters (allowed: "-" and "_")
+    </small>
 
     <div class="p-inputgroup">
       <span class="p-inputgroup-addon">
@@ -47,6 +52,11 @@
       class="error"
       *ngIf="errorExpression('required', createRoomForm.controls.roomName)">
       Game room is required.
+    </small>
+    <small
+      class="error"
+      *ngIf="errorExpression('pattern', createRoomForm.controls.roomName)">
+      No spaces, special characters (allowed: "-" and "_")
     </small>
 
     <p-password
