@@ -4,7 +4,7 @@ import {
   WebsocketServerAction,
 } from '@croco/../libs/croco-common-interfaces';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject, Subject, tap } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { webSocket } from 'rxjs/webSocket';
 
 @Injectable({
@@ -16,13 +16,13 @@ export class WebsocketMainService {
     openObserver: {
       next: () => {
         console.log('next');
-        this.onMainConnect$.next(true);
+        this.onMainConnected$.next(true);
         this.mainWebSocket.next({ type: WebsocketServerAction.serverList });
       },
     },
   });
 
-  public onMainConnect$ = new BehaviorSubject<boolean>(false);
+  public onMainConnected$ = new BehaviorSubject<boolean>(false);
   public serverList$ = new Subject<IWebSocketGameServer[]>();
   public hostServerId$ = new Subject<string>();
 
@@ -44,7 +44,7 @@ export class WebsocketMainService {
         }
       },
       error: () => {
-        this.onMainConnect$.next(false);
+        this.onMainConnected$.next(false);
       },
     });
   }

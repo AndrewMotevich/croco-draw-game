@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { markAsDirty } from '../../utils/markAsDirty';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -15,7 +15,7 @@ import { TextFieldValidationRegex } from '../../constants/constants';
   styleUrls: ['./select-room.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectRoomComponent {
+export class SelectRoomComponent implements OnInit {
   public errorExpression = generateErrorExpression;
 
   public selectRoomDialog = false;
@@ -48,7 +48,9 @@ export class SelectRoomComponent {
   constructor(
     private mainWebsocketService: WebsocketMainService,
     private gameWebsocketService: WebsocketGameService
-  ) {
+  ) {}
+
+  public ngOnInit(): void {
     this.mainWebsocketService.serverList$.subscribe((list) => {
       this.gameRooms.length = 0;
       list.forEach((server) => {

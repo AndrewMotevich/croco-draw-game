@@ -50,12 +50,12 @@ export class ClientPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.mainWebsocketService.onMainConnect$.subscribe((isConnected) => {
+    this.mainWebsocketService.onMainConnected$.subscribe((isConnected) => {
       if (!isConnected) {
         this.router.navigate(['/main']);
       }
     });
-    this.gameWebsocketServer.onConnected$.subscribe((isConnected) => {
+    this.gameWebsocketServer.onGameConnected$.subscribe((isConnected) => {
       if (!isConnected) {
         this.router.navigate(['/main']);
       }

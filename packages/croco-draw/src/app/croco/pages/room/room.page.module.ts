@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TagModule } from 'primeng/tag';
 import { ReadyTagStylePipe } from '../../pipes/ready-tag-style.pipe';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [RoomPageComponent],
@@ -18,6 +19,7 @@ import { ReadyTagStylePipe } from '../../pipes/ready-tag-style.pipe';
     ConfirmDialogModule,
     TagModule,
     ReadyTagStylePipe,
+    ProgressSpinnerModule,
   ],
 })
 export class RoomPageModule {}

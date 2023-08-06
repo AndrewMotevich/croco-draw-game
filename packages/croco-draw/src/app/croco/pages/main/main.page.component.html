@@ -1,6 +1,15 @@
 <main class="main-wrapper">
-  <div class="buttons-wrapper">
-    <croco-create-room></croco-create-room>
-    <croco-select-room></croco-select-room>
-  </div>
+  <ng-template [ngIf]="!showContent">
+    <p-progressSpinner
+      styleClass="w-4rem h-4rem"
+      strokeWidth="8"
+      fill="var(--surface-ground)"
+      animationDuration=".5s"></p-progressSpinner>
+  </ng-template>
+  <ng-template [ngIf]="showContent">
+    <div class="buttons-wrapper">
+      <croco-create-room></croco-create-room>
+      <croco-select-room></croco-select-room>
+    </div>
+  </ng-template>
 </main>

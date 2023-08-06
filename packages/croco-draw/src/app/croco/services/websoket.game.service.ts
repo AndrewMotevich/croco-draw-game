@@ -7,7 +7,7 @@ import {
   IMousePosition,
   IPlayer,
 } from '@croco/../libs/croco-common-interfaces';
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { IDrawPayload } from '@croco/../libs/croco-common-interfaces';
 import { environment } from '../../../environments/environment';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
@@ -21,8 +21,6 @@ export class WebsocketGameService {
   private userName = '';
 
   private gameWebSocket!: WebSocketSubject<unknown>;
-  private messageObservable$!: Observable<MessageEvent>;
-  private errorObservable$!: Observable<MessageEvent>;
 
   public serverName$ = new BehaviorSubject<string>('');
   public serverId$ = new BehaviorSubject<string>('');
@@ -32,7 +30,7 @@ export class WebsocketGameService {
   public players$ = new BehaviorSubject<IPlayer[]>([]);
   public answer$ = new BehaviorSubject<string>('');
 
-  public onConnected$ = new BehaviorSubject<boolean>(false);
+  public onGameConnected$ = new BehaviorSubject<boolean>(false);
   public startGame$ = new BehaviorSubject<boolean>(false);
   public results$ = new BehaviorSubject<boolean>(false);
   public switchHost$ = new BehaviorSubject<boolean>(false);
@@ -47,18 +45,20 @@ export class WebsocketGameService {
   }
 
   public newGameConnection() {
-    const params = `room_id=${this.roomId.toString()}&&password=${
+    const params = `room_if=${this.roomId.toString()}&&password=${
       this.password
     }&&user_name=${this.userName}`;
     const url = new URL(environment.gameServerPath + params).toString();
+
     this.gameWebSocket = webSocket({
       url,
       openObserver: {
         next: () => {
-          this.onConnected$.next(true);
+          this.onGameConnected$.next(true);
         },
       },
     });
+
     this.gameWebSocket.subscribe({
       next: (message) => {
         const parsedMessage = message as IGameRoomMessage;
@@ -88,7 +88,6 @@ export class WebsocketGameService {
           this.serverName$.next((message as { serverName: string }).serverName);
           this.serverId$.next((message as { serverId: string }).serverId);
           this.results$.next(false);
-
           this.router.navigate(['/room']);
         }
         if ((message as { type: string }).type === 'myUserObject') {
@@ -102,13 +101,13 @@ export class WebsocketGameService {
         }
       },
       error: () => {
-        this.onConnected$.next(false);
+        this.onGameConnected$.next(false);
       },
     });
   }
 
   public getPlayers() {
-    this.onConnected$.subscribe((value) => {
+    this.onGameConnected$.subscribe((value) => {
       if (value) {
         this.gameWebSocket.next({ type: GameMessagesType.getPlayers });
         this.gameWebSocket.next({ type: GameMessagesType.order });

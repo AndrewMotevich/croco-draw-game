@@ -23,6 +23,7 @@ export class DrawClientDirective implements OnInit {
   public ngOnInit(): void {
     this.initCanvas();
   }
+
   private initCanvas() {
     const draw$ = this.gameWebsocketService.drawMessages$;
 

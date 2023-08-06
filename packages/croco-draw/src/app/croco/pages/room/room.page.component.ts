@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RoomPageComponent implements OnInit {
+  public showContent = false;
   public roomName = this.gameWebsocketService.serverName$;
   private roomId = this.gameWebsocketService.serverId$;
 
@@ -46,14 +47,17 @@ export class RoomPageComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    this.mainWebsocketService.onMainConnect$.subscribe((isConnected) => {
+    this.mainWebsocketService.onMainConnected$.subscribe((isConnected) => {
       if (!isConnected) {
         this.router.navigate(['/main']);
       }
     });
-    this.gameWebsocketService.onConnected$.subscribe((isConnected) => {
+    this.gameWebsocketService.onGameConnected$.subscribe((isConnected) => {
       if (!isConnected) {
         this.router.navigate(['/main']);
+      } else {
+        this.showContent = true;
+        this.changeDetection.markForCheck();
       }
     });
     this.gameWebsocketService.results$.subscribe((value) => {

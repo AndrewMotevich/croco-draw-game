@@ -27,14 +27,14 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.primengConfig.ripple = true;
-    this.mainWebsocketService.onMainConnect$.subscribe((isConnected) => {
+    this.mainWebsocketService.onMainConnected$.subscribe((isConnected) => {
       if (!isConnected) {
         this.messageService.add(FailedConnectionToMain);
         return;
       }
       this.messageService.add(SuccessConnectionToMain);
     });
-    this.gameWebsocketService.onConnected$.subscribe((isConnected) => {
+    this.gameWebsocketService.onGameConnected$.subscribe((isConnected) => {
       if (!isConnected) {
         this.messageService.add(FailedConnectionToGame);
         return;

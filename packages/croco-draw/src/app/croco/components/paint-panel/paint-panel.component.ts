@@ -15,7 +15,9 @@ import { Router } from '@angular/router';
 import { WebsocketMainService } from '../../services/websocket.main.service';
 import { NextStepInfo } from '../../../../messages/host.messages';
 import { RiddleWordValidationRegex } from '../../constants/constants';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'croco-paint-panel',
   templateUrl: './paint-panel.component.html',
@@ -30,7 +32,7 @@ export class PaintPanelComponent implements OnInit {
 
   public riddleWord!: string;
 
-  public activeIcon: [string, { tool: DrawTools }] = [
+  public activeTool: [string, { tool: DrawTools }] = [
     'pi pi-pencil',
     { tool: DrawTools.pen },
   ];
@@ -39,30 +41,30 @@ export class PaintPanelComponent implements OnInit {
     {
       icon: 'fa-solid fa-fill',
       command: () => {
-        this.activeIcon = ['fa-solid fa-fill', { tool: DrawTools.fill }];
+        this.activeTool = ['fa-solid fa-fill', { tool: DrawTools.fill }];
       },
     },
     {
       icon: 'pi pi-eraser',
       command: () => {
-        this.activeIcon = ['pi pi-eraser', { tool: DrawTools.eraser }];
+        this.activeTool = ['pi pi-eraser', { tool: DrawTools.eraser }];
       },
     },
     {
       icon: 'fa-solid fa-brush',
       command: () => {
-        this.activeIcon = ['fa-solid fa-brush', { tool: DrawTools.brush }];
+        this.activeTool = ['fa-solid fa-brush', { tool: DrawTools.brush }];
       },
     },
     {
       icon: 'pi pi-pencil',
       command: () => {
-        this.activeIcon = ['pi pi-pencil', { tool: DrawTools.pen }];
+        this.activeTool = ['pi pi-pencil', { tool: DrawTools.pen }];
       },
     },
   ];
 
-  public riddleWordFrom = new FormGroup({
+  public riddleWordForm = new FormGroup({
     riddleWord: new FormControl('', {
       nonNullable: true,
       validators: [
@@ -72,8 +74,8 @@ export class PaintPanelComponent implements OnInit {
     }),
   });
 
-  public canvasToolsFrom = new FormGroup({
-    colorPicker: new FormControl('#000', {
+  public canvasToolsForm = new FormGroup({
+    colorPicker: new FormControl('#000000', {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -93,12 +95,12 @@ export class PaintPanelComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.mainWebsocketService.onMainConnect$.subscribe((isConnected) => {
+    this.mainWebsocketService.onMainConnected$.subscribe((isConnected) => {
       if (!isConnected) {
         this.router.navigate(['/main']);
       }
     });
-    this.gameWebsocketServer.onConnected$.subscribe((isConnected) => {
+    this.gameWebsocketServer.onGameConnected$.subscribe((isConnected) => {
       if (!isConnected) {
         this.router.navigate(['/main']);
       }
@@ -130,11 +132,11 @@ export class PaintPanelComponent implements OnInit {
       message: 'Is this word correct and you want to submit it?',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        if (!this.riddleWordFrom.valid) {
-          markAsDirty(this.riddleWordFrom.controls);
+        if (!this.riddleWordForm.valid) {
+          markAsDirty(this.riddleWordForm.controls);
           return;
         }
-        this.riddleWord = this.riddleWordFrom.controls.riddleWord.value;
+        this.riddleWord = this.riddleWordForm.controls.riddleWord.value;
         this.showCanvas = true;
         this.gameWebsocketServer.setRiddleWord(this.riddleWord);
       },

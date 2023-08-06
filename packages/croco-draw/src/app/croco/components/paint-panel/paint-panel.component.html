@@ -1,7 +1,7 @@
 <div class="paint-panel-wrapper">
   <ng-template [ngIf]="!showCanvas">
     <h2>Write a riddle word here:</h2>
-    <form [formGroup]="riddleWordFrom">
+    <form [formGroup]="riddleWordForm">
       <div class="p-inputgroup">
         <input
           type="text"
@@ -16,12 +16,12 @@
       </div>
       <small
         class="error"
-        *ngIf="errorExpression('required', riddleWordFrom.controls.riddleWord)">
+        *ngIf="errorExpression('required', riddleWordForm.controls.riddleWord)">
         Riddle word is required
       </small>
       <small
         class="error"
-        *ngIf="errorExpression('pattern', riddleWordFrom.controls.riddleWord)">
+        *ngIf="errorExpression('pattern', riddleWordForm.controls.riddleWord)">
         No spaces, special characters (allowed: "-" and "_")
       </small>
       <p-confirmPopup></p-confirmPopup>
@@ -34,13 +34,13 @@
     <div class="canvas-wrapper">
       <div class="canvas-tools">
         <form
-          [formGroup]="canvasToolsFrom"
+          [formGroup]="canvasToolsForm"
           class="canvas-tools">
           <label for="tools">Tools</label>
           <div class="speedDial">
             <p-speedDial
               id="tools"
-              [showIcon]="activeIcon[0]"
+              [showIcon]="activeTool[0]"
               hideIcon="pi pi-times"
               [model]="items"
               direction="right"
@@ -73,9 +73,9 @@
       </div>
       <canvas
         crocoDrawHost
-        [color]="canvasToolsFrom.controls.colorPicker.value"
-        [range]="canvasToolsFrom.controls.sizeRange.value"
-        [tool]="activeIcon[1].tool"
+        [color]="canvasToolsForm.controls.colorPicker.value"
+        [range]="canvasToolsForm.controls.sizeRange.value"
+        [tool]="activeTool[1].tool"
         width="500"
         height="500"
         #canvas></canvas>

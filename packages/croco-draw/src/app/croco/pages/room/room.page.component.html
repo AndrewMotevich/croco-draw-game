@@ -1,44 +1,53 @@
 <main class="main-wrapper">
-  <div class="room-container">
-    <h2 class="title-wrapper">Room: {{roomName | async}}
-      <p-button
-        icon="pi pi-trash"
-        styleClass="p-button-rounded p-button-warning  p-button-raised"
-        (click)="confirm()"></p-button>
-    </h2>
-    <p-table
-      [columns]="cols"
-      [value]="players"
-      [tableStyle]="{ 'min-width': '35rem' }">
-      <ng-template
-        pTemplate="header"
-        let-columns>
-        <tr>
-          <th *ngFor="let col of columns">{{ col.header }}</th>
-        </tr>
+  <ng-template [ngIf]="!showContent">
+    <p-progressSpinner
+      styleClass="w-4rem h-4rem"
+      strokeWidth="8"
+      fill="var(--surface-ground)"
+      animationDuration=".5s"></p-progressSpinner>
+  </ng-template>
+  <ng-template [ngIf]="showContent">
+    <div class="room-container">
+      <h2 class="title-wrapper">Room: {{roomName | async}}
+        <p-button
+          icon="pi pi-trash"
+          styleClass="p-button-rounded p-button-warning  p-button-raised"
+          (click)="confirm()"></p-button>
+      </h2>
+      <p-table
+        [columns]="cols"
+        [value]="players"
+        [tableStyle]="{ 'min-width': '35rem' }">
+        <ng-template
+          pTemplate="header"
+          let-columns>
+          <tr>
+            <th *ngFor="let col of columns">{{ col.header }}</th>
+          </tr>
+        </ng-template>
+        <ng-template
+          pTemplate="body"
+          let-player
+          let-columns="columns">
+          <tr [ngClass]="{'row-highlight': player.name === myName}">
+            <td>{{ player.name }}</td>
+            <td>{{ player.host }}</td>
+            <td>{{ player.score }}</td>
+            <td>
+              <p-tag
+                [severity]="player.ready | readyTagStyle"
+                [value]="player.ready"></p-tag>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <ng-template [ngIf]="!disableReady">
+        <p-button
+          icon="pi pi-check"
+          label="Ready"
+          (click)="ready()"></p-button>
       </ng-template>
-      <ng-template
-        pTemplate="body"
-        let-player
-        let-columns="columns">
-        <tr [ngClass]="{'row-highlight': player.name === myName}">
-          <td>{{ player.name }}</td>
-          <td>{{ player.host }}</td>
-          <td>{{ player.score }}</td>
-          <td>
-            <p-tag
-              [severity]="player.ready | readyTagStyle"
-              [value]="player.ready"></p-tag>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
-    <ng-template [ngIf]="!disableReady">
-      <p-button
-        icon="pi pi-check"
-        label="Ready"
-        (click)="ready()"></p-button>
-    </ng-template>
-  </div>
+    </div>
+  </ng-template>
   <p-confirmDialog></p-confirmDialog>
 </main>
