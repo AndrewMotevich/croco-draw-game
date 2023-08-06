@@ -4,54 +4,54 @@ import {
   WebsocketServerAction,
 } from '@croco/../libs/croco-common-interfaces';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject, Subject, fromEvent } from 'rxjs';
+import { BehaviorSubject, Subject, tap } from 'rxjs';
+import { webSocket } from 'rxjs/webSocket';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebsocketMainService {
-  private mainWebSocket = new WebSocket(environment.mainServerPath);
-
-  private mainWebsocketMessageObservable$ = fromEvent<MessageEvent>(
-    this.mainWebSocket,
-    'message'
-  );
+  private mainWebSocket = webSocket({
+    url: environment.mainServerPath,
+    openObserver: {
+      next: () => {
+        console.log('next');
+        this.onMainConnect$.next(true);
+        this.mainWebSocket.next({ type: WebsocketServerAction.serverList });
+      },
+    },
+  });
 
   public onMainConnect$ = new BehaviorSubject<boolean>(false);
   public serverList$ = new Subject<IWebSocketGameServer[]>();
   public hostServerId$ = new Subject<string>();
 
   constructor() {
-    this.mainWebsocketMessageObservable$.subscribe((message) => {
-      const parsedMessage = JSON.parse(message.data);
-      console.log(parsedMessage);
-      if (
-        (parsedMessage as { type: string; servers: IWebSocketGameServer[] })
-          .type === 'servers'
-      ) {
-        const payload = (
-          parsedMessage as { type: string; servers: IWebSocketGameServer[] }
-        ).servers;
-        this.serverList$.next(payload);
-      }
-      if ((parsedMessage as { roomId: string }).roomId) {
-        this.hostServerId$.next((parsedMessage as { roomId: string }).roomId);
-      }
-    });
-    this.mainWebSocket.addEventListener('open', () => {
-      this.onMainConnect$.next(true);
-      this.mainWebSocket.send(
-        JSON.stringify({ type: WebsocketServerAction.serverList })
-      );
-    });
-    this.mainWebSocket.addEventListener('error', () => {
-      this.onMainConnect$.next(false);
+    this.mainWebSocket.subscribe({
+      next: (message) => {
+        console.log(message);
+        if (
+          (message as { type: string; servers: IWebSocketGameServer[] })
+            .type === 'servers'
+        ) {
+          const payload = (
+            message as { type: string; servers: IWebSocketGameServer[] }
+          ).servers;
+          this.serverList$.next(payload);
+        }
+        if ((message as { roomId: string }).roomId) {
+          this.hostServerId$.next((message as { roomId: string }).roomId);
+        }
+      },
+      error: () => {
+        this.onMainConnect$.next(false);
+      },
     });
   }
 
   public getServerList() {
     const message = { type: WebsocketServerAction.serverList };
-    this.mainWebSocket.send(JSON.stringify(message));
+    this.mainWebSocket.next(message);
   }
 
   public createServer(password: string, serverName: string) {
@@ -59,7 +59,7 @@ export class WebsocketMainService {
       type: WebsocketServerAction.createServer,
       payload: { password, serverName },
     };
-    this.mainWebSocket.send(JSON.stringify(message));
+    this.mainWebSocket.next(message);
   }
 
   public removeServer(serverId: string) {
@@ -67,6 +67,6 @@ export class WebsocketMainService {
       type: WebsocketServerAction.removeServer,
       payload: { serverId },
     };
-    this.mainWebSocket.send(JSON.stringify(message));
+    this.mainWebSocket.next(message);
   }
 }

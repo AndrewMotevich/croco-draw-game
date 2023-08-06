@@ -8,7 +8,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { markAsDirty } from '../../utils/markAsDirty';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { generateErrorExpression } from '../../utils/generateErrorExpression';
-import { DrawTools } from 'libs/croco-common-interfaces/src/lib/enums';
+import { DrawTools } from '@croco/../libs/croco-common-interfaces';
 import { clearCanvas, saveCanvas } from '../../helpers/draw.helper';
 import { WebsocketGameService } from '../../services/websoket.game.service';
 import { Router } from '@angular/router';
