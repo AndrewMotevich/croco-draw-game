@@ -12,6 +12,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [MainPageComponent, CreateRoomComponent, SelectRoomComponent],
@@ -26,6 +27,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     TooltipModule,
     InputTextModule,
     ProgressSpinnerModule,
+    ToastModule,
   ],
   exports: [ButtonModule],
 })

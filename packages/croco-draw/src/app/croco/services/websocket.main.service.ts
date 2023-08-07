@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import {
   IWebSocketGameServer,
   WebsocketServerAction,
 } from '@croco/../libs/croco-common-interfaces';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject, Subject, catchError, timeout } from 'rxjs';
+import { ReplaySubject, Subject, catchError, timeout } from 'rxjs';
 import { webSocket } from 'rxjs/webSocket';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -21,16 +22,17 @@ export class WebsocketMainService {
     },
   });
 
-  public onMainConnected$ = new BehaviorSubject<boolean>(false);
+  public onMainConnected$ = new ReplaySubject<boolean>(1);
   public serverList$ = new Subject<IWebSocketGameServer[]>();
   public hostServerId$ = new Subject<string>();
 
-  constructor() {
+  constructor(private router: Router) {
     this.mainWebSocket
       .pipe(
         timeout({ first: 4000 }),
         catchError(() => {
           this.onMainConnected$.next(false);
+          this.router.navigate(['/error']);
           throw new Error();
         })
       )

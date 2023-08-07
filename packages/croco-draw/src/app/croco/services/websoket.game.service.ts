@@ -7,7 +7,7 @@ import {
   IMousePosition,
   IPlayer,
 } from '@croco/../libs/croco-common-interfaces';
-import { BehaviorSubject, Subject, timeout } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { IDrawPayload } from '@croco/../libs/croco-common-interfaces';
 import { environment } from '../../../environments/environment';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
@@ -30,7 +30,7 @@ export class WebsocketGameService {
   public players$ = new BehaviorSubject<IPlayer[]>([]);
   public answer$ = new BehaviorSubject<string>('');
 
-  public onGameConnected$ = new BehaviorSubject<boolean>(false);
+  public onGameConnected$ = new Subject<boolean>();
   public startGame$ = new BehaviorSubject<boolean>(false);
   public results$ = new BehaviorSubject<boolean>(false);
   public switchHost$ = new BehaviorSubject<boolean>(false);
@@ -59,7 +59,7 @@ export class WebsocketGameService {
       },
     });
 
-    this.gameWebSocket.pipe(timeout({ first: 4000 })).subscribe({
+    this.gameWebSocket.subscribe({
       next: (message) => {
         const parsedMessage = message as IGameRoomMessage;
         // message broker
