@@ -13,6 +13,7 @@ import {
   SuccessConnectionToMain,
 } from '../../../../messages/main-server.messages';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { CONNECTION_DELAY } from '../../constants/constants';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -34,7 +35,7 @@ export class MainPageComponent implements OnInit {
   ngOnInit() {
     this.mainWebsocketService.onMainConnected$
       .pipe(
-        timeout({ first: 3000 }),
+        timeout({ first: CONNECTION_DELAY }),
         catchError((err) => {
           this.router.navigate(['/error']);
           throw new Error(err.message);

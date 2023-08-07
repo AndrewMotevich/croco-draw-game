@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { WebsocketMainService } from '../../services/websocket.main.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'croco-error.page',
@@ -9,4 +11,15 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./error.page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ErrorPageComponent {}
+export class ErrorPageComponent implements OnInit {
+  constructor(
+    private mainWebsocketService: WebsocketMainService,
+    private router: Router
+  ) {}
+
+  ngOnInit() {
+    this.mainWebsocketService.onMainConnected$.subscribe((value) => {
+      if (value) this.router.navigate(['/main']);
+    });
+  }
+}

@@ -15,6 +15,7 @@ export enum WebsocketServerAction {
   createServer = 'createServer',
   removeServer = 'removeServer',
   serverList = 'serverList',
+  servers = 'servers',
 }
 
 export enum GameMessagesType {
@@ -31,4 +32,5 @@ export enum GameMessagesType {
   answer = 'answer',
   draw = 'draw',
   order = 'order',
+  drawMessage = 'drawMessage',
 }

@@ -30,6 +30,8 @@ export interface IGame {
 export interface IMainServerMessage {
   type: WebsocketServerAction;
   payload?: unknown;
+  servers?: IWebSocketGameServer[];
+  roomId?: string;
 }
 
 export interface IGameRoomMessage {

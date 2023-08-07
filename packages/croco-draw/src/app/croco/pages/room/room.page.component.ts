@@ -47,18 +47,13 @@ export class RoomPageComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    this.mainWebsocketService.onMainConnected$.subscribe((isConnected) => {
-      if (!isConnected) {
-        this.router.navigate(['/main']);
-      }
-    });
     this.gameWebsocketService.onGameConnected$.subscribe((isConnected) => {
       if (!isConnected) {
         this.router.navigate(['/main']);
-      } else {
-        this.showContent = true;
-        this.changeDetection.markForCheck();
+        return;
       }
+      this.showContent = true;
+      this.changeDetection.markForCheck();
     });
     this.gameWebsocketService.results$.subscribe((value) => {
       if (value) {

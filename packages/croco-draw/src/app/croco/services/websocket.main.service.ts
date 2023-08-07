@@ -1,5 +1,6 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
+  IMainServerMessage,
   IWebSocketGameServer,
   WebsocketServerAction,
 } from '@croco/../libs/croco-common-interfaces';
@@ -7,12 +8,13 @@ import { environment } from '../../../environments/environment';
 import { ReplaySubject, Subject, catchError, timeout } from 'rxjs';
 import { webSocket } from 'rxjs/webSocket';
 import { Router } from '@angular/router';
+import { CONNECTION_DELAY } from '../constants/constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebsocketMainService {
-  private mainWebSocket = webSocket({
+  private mainWebSocket = webSocket<IMainServerMessage>({
     url: environment.mainServerPath,
     openObserver: {
       next: () => {
@@ -29,7 +31,7 @@ export class WebsocketMainService {
   constructor(private router: Router) {
     this.mainWebSocket
       .pipe(
-        timeout({ first: 4000 }),
+        timeout({ first: CONNECTION_DELAY }),
         catchError(() => {
           this.onMainConnected$.next(false);
           this.router.navigate(['/error']);
@@ -39,17 +41,13 @@ export class WebsocketMainService {
       .subscribe({
         next: (message) => {
           console.log(message);
-          if (
-            (message as { type: string; servers: IWebSocketGameServer[] })
-              .type === 'servers'
-          ) {
-            const payload = (
-              message as { type: string; servers: IWebSocketGameServer[] }
-            ).servers;
+          // message broker
+          if (message.servers) {
+            const payload = message.servers || [];
             this.serverList$.next(payload);
           }
-          if ((message as { roomId: string }).roomId) {
-            this.hostServerId$.next((message as { roomId: string }).roomId);
+          if (message.roomId) {
+            this.hostServerId$.next(message.roomId);
           }
         },
       });
