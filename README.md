@@ -7,6 +7,8 @@ Second player must guess the word.
 
 # Deployment: [Link](https://croco-draw-game.vercel.app/main)
 
+# UML class schema: [Link](https://miro.com/app/board/uXjVMXR0BAk=/?share_link_id=289366143613)
+
 ## Run localy:
 ```
 npm install

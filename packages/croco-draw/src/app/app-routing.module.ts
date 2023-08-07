@@ -6,6 +6,7 @@ import { ClientPageComponent } from './croco/pages/client/client.page.component'
 import { AboutPageComponent } from './croco/pages/about/about.page.component';
 import { NgModule } from '@angular/core';
 import { RoomPageComponent } from './croco/pages/room/room.page.component';
+import { ErrorPageComponent } from './croco/pages/error/error.page.component';
 
 export const appRoutes: Route[] = [
   { path: 'main', component: MainPageComponent },
@@ -21,6 +22,10 @@ export const appRoutes: Route[] = [
   {
     path: 'client',
     component: ClientPageComponent,
+  },
+  {
+    path: 'error',
+    component: ErrorPageComponent,
   },
   { path: '', redirectTo: 'main', pathMatch: 'full' },
   { path: '**', component: NotFoundPageComponent },

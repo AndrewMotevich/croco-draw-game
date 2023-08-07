@@ -4,7 +4,7 @@ import {
   WebsocketServerAction,
 } from '@croco/../libs/croco-common-interfaces';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, catchError, timeout } from 'rxjs';
 import { webSocket } from 'rxjs/webSocket';
 
 @Injectable({
@@ -15,7 +15,6 @@ export class WebsocketMainService {
     url: environment.mainServerPath,
     openObserver: {
       next: () => {
-        console.log('next');
         this.onMainConnected$.next(true);
         this.mainWebSocket.next({ type: WebsocketServerAction.serverList });
       },
@@ -27,26 +26,31 @@ export class WebsocketMainService {
   public hostServerId$ = new Subject<string>();
 
   constructor() {
-    this.mainWebSocket.subscribe({
-      next: (message) => {
-        console.log(message);
-        if (
-          (message as { type: string; servers: IWebSocketGameServer[] })
-            .type === 'servers'
-        ) {
-          const payload = (
-            message as { type: string; servers: IWebSocketGameServer[] }
-          ).servers;
-          this.serverList$.next(payload);
-        }
-        if ((message as { roomId: string }).roomId) {
-          this.hostServerId$.next((message as { roomId: string }).roomId);
-        }
-      },
-      error: () => {
-        this.onMainConnected$.next(false);
-      },
-    });
+    this.mainWebSocket
+      .pipe(
+        timeout({ first: 4000 }),
+        catchError(() => {
+          this.onMainConnected$.next(false);
+          throw new Error();
+        })
+      )
+      .subscribe({
+        next: (message) => {
+          console.log(message);
+          if (
+            (message as { type: string; servers: IWebSocketGameServer[] })
+              .type === 'servers'
+          ) {
+            const payload = (
+              message as { type: string; servers: IWebSocketGameServer[] }
+            ).servers;
+            this.serverList$.next(payload);
+          }
+          if ((message as { roomId: string }).roomId) {
+            this.hostServerId$.next((message as { roomId: string }).roomId);
+          }
+        },
+      });
   }
 
   public getServerList() {

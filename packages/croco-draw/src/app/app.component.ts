@@ -10,6 +10,8 @@ import {
   FailedConnectionToGame,
   SuccessConnectionToGame,
 } from '../messages/game-server.messages';
+import { catchError, timeout } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'croco-root',
@@ -22,24 +24,41 @@ export class AppComponent implements OnInit {
     private primengConfig: PrimeNGConfig,
     private mainWebsocketService: WebsocketMainService,
     private gameWebsocketService: WebsocketGameService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.primengConfig.ripple = true;
-    this.mainWebsocketService.onMainConnected$.subscribe((isConnected) => {
-      if (!isConnected) {
-        this.messageService.add(FailedConnectionToMain);
-        return;
-      }
-      this.messageService.add(SuccessConnectionToMain);
-    });
-    this.gameWebsocketService.onGameConnected$.subscribe((isConnected) => {
-      if (!isConnected) {
-        this.messageService.add(FailedConnectionToGame);
-        return;
-      }
-      this.messageService.add(SuccessConnectionToGame);
-    });
+    this.mainWebsocketService.onMainConnected$
+      .pipe(
+        timeout({ first: 3000 }),
+        catchError((err) => {
+          this.router.navigate(['/error']);
+          throw new Error(err.message);
+        })
+      )
+      .subscribe((isConnected) => {
+        if (!isConnected) {
+          this.messageService.add(FailedConnectionToMain);
+          return;
+        }
+        this.messageService.add(SuccessConnectionToMain);
+      });
+    this.gameWebsocketService.onGameConnected$
+      .pipe(
+        timeout({ first: 3000 }),
+        catchError((err) => {
+          this.router.navigate(['/error']);
+          throw new Error(err.message);
+        })
+      )
+      .subscribe((isConnected) => {
+        if (!isConnected) {
+          this.messageService.add(FailedConnectionToGame);
+          return;
+        }
+        this.messageService.add(SuccessConnectionToGame);
+      });
   }
 }
