@@ -20,7 +20,7 @@ export class WebsocketGameService {
   private password = '';
   private userName = '';
 
-  private gameWebSocket!: WebSocketSubject<unknown>;
+  private gameWebSocket!: WebSocketSubject<IGameRoomMessage>;
 
   public serverName$ = new BehaviorSubject<string>('');
   public serverId$ = new BehaviorSubject<string>('');
@@ -45,12 +45,15 @@ export class WebsocketGameService {
   }
 
   public newGameConnection() {
-    const params = `room_id=${this.roomId.toString()}&&password=${
-      this.password
-    }&&user_name=${this.userName}`;
-    const url = new URL(environment.gameServerPath + params).toString();
+    const params = new URLSearchParams();
+    params.append('room_id', this.roomId.toString());
+    params.append('password', this.password);
+    params.append('user_name', this.userName);
+    const url = new URL(
+      environment.gameServerPath + params.toString()
+    ).toString();
 
-    this.gameWebSocket = webSocket({
+    this.gameWebSocket = webSocket<IGameRoomMessage>({
       url,
       openObserver: {
         next: () => {
@@ -61,41 +64,40 @@ export class WebsocketGameService {
 
     this.gameWebSocket.subscribe({
       next: (message) => {
-        const parsedMessage = message as IGameRoomMessage;
-        console.log('game server', parsedMessage);
+        console.log('game server', message);
         // message broker
-        if (parsedMessage.type === GameMessagesType.players) {
+        if (message.type === GameMessagesType.players) {
           this.players$.next(
-            Object.values(parsedMessage.payload as { [key: string]: IPlayer })
+            Object.values(message.payload as { [key: string]: IPlayer })
           );
         }
-        if (parsedMessage.type === GameMessagesType.results) {
+        if (message.type === GameMessagesType.results) {
           this.results$.next(true);
         }
-        if (parsedMessage.type === GameMessagesType.switchHost) {
+        if (message.type === GameMessagesType.switchHost) {
           this.switchHost$.next(true);
         }
-        if (parsedMessage.type === GameMessagesType.next) {
+        if (message.type === GameMessagesType.next) {
           this.next$.next(true);
         }
-        if (parsedMessage.type === GameMessagesType.start) {
+        if (message.type === GameMessagesType.start) {
           this.startGame$.next(true);
         }
-        if (parsedMessage.type === GameMessagesType.answer) {
-          this.answer$.next(parsedMessage.payload as string);
+        if (message.type === GameMessagesType.answer) {
+          this.answer$.next(message.payload as string);
         }
-        if ((message as { type: string }).type === 'serverInfo') {
-          this.serverName$.next((message as { serverName: string }).serverName);
-          this.serverId$.next((message as { serverId: string }).serverId);
+        if (message.type === GameMessagesType.serverInfo) {
+          this.serverName$.next(message.serverName || '');
+          this.serverId$.next(message.serverId || '');
           this.results$.next(false);
           this.router.navigate(['/room']);
         }
-        if ((message as { type: string }).type === 'myUserObject') {
+        if (message.type === GameMessagesType.myUserObject) {
           this.myUserObject$.next(
             (message as { myUserObject: IPlayer }).myUserObject
           );
         }
-        if ((message as { type: string }).type === 'drawMessage') {
+        if (message.type === GameMessagesType.drawMessage) {
           const drawMessage = (message as { message: string }).message;
           this.drawMessages$.next(JSON.parse(drawMessage).payload);
         }

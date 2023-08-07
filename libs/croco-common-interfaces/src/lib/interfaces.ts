@@ -37,6 +37,10 @@ export interface IMainServerMessage {
 export interface IGameRoomMessage {
   type: GameMessagesType;
   payload?: unknown;
+  serverName?: string;
+  serverId?: string;
+  myUserObject?: IPlayer;
+  message?: string;
 }
 
 export interface IDrawPayload {

@@ -33,4 +33,6 @@ export enum GameMessagesType {
   draw = 'draw',
   order = 'order',
   drawMessage = 'drawMessage',
+  serverInfo = 'serverInfo',
+  myUserObject = 'myUserObject',
 }
